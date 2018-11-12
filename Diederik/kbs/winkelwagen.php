@@ -80,11 +80,9 @@ if(empty($_SESSION['winkelwagen'])){
     if(empty($_SESSION['aantal'])){
 	$_SESSION['aantal'] = array();
 	}
-	if(isset($_GET['artikelid']) && isset($_GET['number']) && $_GET['number'] >= 1){
+	if(isset($_GET['artikelid']) && isset($_GET['number'])){
 array_push($_SESSION['winkelwagen'], $_GET['artikelid']);
 array_push($_SESSION['aantal'], $_GET['number']);
-   } elseif(isset($_GET['number']) && $_GET['number'] < 1){
-   echo 'Aantal moet groter dan 0 zijn';
    }
    
    foreach($_SESSION['winkelwagen'] as $key => $value){

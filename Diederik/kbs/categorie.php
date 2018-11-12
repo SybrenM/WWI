@@ -1,6 +1,7 @@
 <?php
 include 'session.php';
-$zoek = filter_input(INPUT_GET, "zoek", FILTER_SANITIZE_STRING);
+$categorie = filter_input(INPUT_GET, "categorie", FILTER_SANITIZE_STRING);
+
 ?>
 
 <!DOCTYPE html>
@@ -50,62 +51,49 @@ $zoek = filter_input(INPUT_GET, "zoek", FILTER_SANITIZE_STRING);
                     <li class="nav-item">
                         <a class="nav-link" href="#">Contact</a>
                     </li>
-                    <form class="form-inline" action="zoek.php?zoek=<?php print($_GET['zoek']) ?>" method="get">
+                    <form class="form-inline" action="zoek.php">
                         <input class="form-control mr-sm-2" type="search" placeholder="Zoek artikel..." aria-label="Search" name="zoek">
                         <button class="btn btn-primary" type="submit" name="zoekKnop">Zoeken</button>
+
+
+                    </form>
                 </ul>
+            </div>
         </nav>
+
+
         <div class="container">
+            <h1>
+                <?php
+                $row = $conn->query("SELECT * FROM stockitems SI JOIN stockitemstockgroups SISG on SI.StockItemID = SISG.StockItemID WHERE SISG.StockgroupID = " . $categorie);
+                while ($artikel = $row->fetch()) {
+                    $artikelNaam = $artikel["StockItemName"];
+                    $artikelID = $artikel["StockItemID"];
+                    $artikelPrijs = $artikel["RecommendedRetailPrice"];
 
-            <?php
-            if (isset($_GET['zoekKnop'])) {
-                try {
-                    $search = $_GET['zoek'];
-                    $query = $conn->query("SELECT * FROM stockitems WHERE StockItemName LIKE '%" . $search . "%' OR SearchDetails LIKE '%" . $search . "%'");
-                    $count = $query->rowCount();
-                    while ($row = $query->fetch()) {
-						$artikelNaam = $row["StockItemName"];
-                        $artikelID = $row["StockItemID"];
-                        $artikelPrijs = $row["RecommendedRetailPrice"];
-						$queryTwee = $conn->query("SELECT * FROM stockitems STI WHERE Size LIKE '%S' OR '%M' OR '%L'");
-						While $rowTwee = $queryTwee->fetch()) {
-							$OuterPackageID = $rowTwee["OuterPackageID"] 
-							
-							
-							
-						}
-                        if (isset($artikelID)) {
-                            ?>
+                    if (isset($artikelID)) {
+                        ?>         
+                        <div class="row">
+                            <div class="col-lg-4 col-md-4 col-sm-12">
+                            <?php $fotoID = rand(1, 18); ?>
+                                <img src="artikelFoto/<?php print($fotoID); ?>.jpg"  class="artikelImg">
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-12">
+                                <a href="artikel.php?artikelid=<?php print($artikelID); ?>" class="artikelTekst"><h5><?php print($artikelNaam); ?></h5></a>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-12">
+                                <?php print("<h3 class='artikelPrijs'>€" . $artikelPrijs . "</h3>"); ?>
+                            </div>
+                            <hr style="width:75%">
+                        </div>
 
-                            <div class="row">
-                                <div class="col-lg-4">
-                                     <?php $fotoID = rand(1, 18); ?>
-                                    <img src="artikelFoto/<?php print($fotoID); ?>.jpg" class="artikelImg">
-                                </div>
-                                <div class="col-lg-4">
-                                    <a href="artikel.php?artikelid=<?php print($artikelID); ?>"><h5><?php print($artikelNaam); ?></h5></a>
-                                </div>
-                                <div class="col-lg-4">
-                                    <?php print("<h3>€" . $artikelPrijs . "</h3>"); ?>
-                                </div>
-                                <hr style="width:75%">
-                            </div> <?php
-                        }
+                        <?php
+                    } else {
+                        print("Niks gevonden.");
                     }
-                    if ($count == 0) {
-                        echo 'Geen zoekresultaten gevonden voor: \''.$zoek."'";
-                    }
-                } catch (PDOException $e) {
-                    print "Error!: " . $e->getMessage() . "<br/>";
-                    die();
                 }
-            }
-            ?>
+                ?>
         </div>
-
-
-
-
 
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>

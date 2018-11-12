@@ -64,16 +64,10 @@ $zoek = filter_input(INPUT_GET, "zoek", FILTER_SANITIZE_STRING);
                     $query = $conn->query("SELECT * FROM stockitems WHERE StockItemName LIKE '%" . $search . "%' OR SearchDetails LIKE '%" . $search . "%'");
                     $count = $query->rowCount();
                     while ($row = $query->fetch()) {
-						$artikelNaam = $row["StockItemName"];
+                        $artikelNaam = $row["StockItemName"];
                         $artikelID = $row["StockItemID"];
                         $artikelPrijs = $row["RecommendedRetailPrice"];
-						$queryTwee = $conn->query("SELECT * FROM stockitems STI WHERE Size LIKE '%S' OR '%M' OR '%L'");
-						While $rowTwee = $queryTwee->fetch()) {
-							$OuterPackageID = $rowTwee["OuterPackageID"] 
-							
-							
-							
-						}
+
                         if (isset($artikelID)) {
                             ?>
 
