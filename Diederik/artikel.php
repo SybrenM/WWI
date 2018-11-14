@@ -4,8 +4,13 @@ $artikelID = filter_input(INPUT_GET, "artikelid", FILTER_SANITIZE_STRING);
 include 'connection.php';
 
 function clean($string) {
-   $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
-   return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
+    $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
+    return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
+}
+
+function like_match($pattern, $subject) {
+    $pattern = str_replace('%', '.*', preg_quote($pattern, '/'));
+    return (bool) preg_match("/^{$pattern}$/i", $subject);
 }
 ?>
 <!doctype html>
@@ -28,33 +33,43 @@ function clean($string) {
                 margin-top: 100px;
             }
         </style>
-        <title>Hello, world!</title>
+        <title>Hello, world!</title> 
     </head>
     <?php
-    $row = $conn->query("SELECT * FROM stockitems SI JOIN suppliers S on SI.supplierID = S.supplierID WHERE SI.stockitemid = " . $artikelID);
-    while ($artikel = $row->fetch()) {
-        $artikelNaam = $artikel["StockItemName"];
-        $artikelID = $artikel["StockItemID"];
-        $artikelPrijs = $artikel["RecommendedRetailPrice"];
-        $slogan = $artikel["MarketingComments"];
-        $derdePartij = $artikel["SupplierName"];
+    $query = $conn->query("SELECT * FROM stockitems SI JOIN suppliers S on SI.supplierID = S.supplierID WHERE SI.stockitemid = " . $artikelID);
+    $count = $query->rowCount();
+    $artikelNaamTweedeKeer = '';
+    while ($row = $query->fetch()) {
+        $artikelNaam = $row["StockItemName"];
+        $artikelID = $row["StockItemID"];
+        $artikelPrijs = $row["RecommendedRetailPrice"];
+        $artikelMaat = $row["Size"];
+        $slogan = $row["MarketingComments"];
+        $derdePartij = $row["SupplierName"];
+        $Small = like_match('%S', $artikelMaat);
+        $Medium = like_match('M', $artikelMaat);
+        $Large = like_match('%L', $artikelMaat);
+        if ($Small OR $Medium OR $Large) {
+            $artikelNaam = str_replace(") " . $artikelMaat, '', $artikelNaam);
+            $artikelNaam = $artikelNaam . ")";
+        }
         ?>
         <body>
-            <nav class="navbar navbar-expand-lg navbar-light">
-                <a class="navbar-brand" href="index.php">WideWorldImporters</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+            <nav class = "navbar navbar-expand-lg navbar-light">
+                <a class = "navbar-brand" href = "index.php">WideWorldImporters</a>
+                <button class = "navbar-toggler" type = "button" data-toggle = "collapse" data-target = "#navbarNavDropdown" aria-controls = "navbarNavDropdown" aria-expanded = "false" aria-label = "Toggle navigation">
+                    <span class = "navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarNavDropdown">
-                    <ul class="navbar-nav">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="index.php">Home <span class="sr-only">(current)</span></a>
+                <div class = "collapse navbar-collapse" id = "navbarNavDropdown">
+                    <ul class = "navbar-nav">
+                        <li class = "nav-item active">
+                            <a class = "nav-link" href = "index.php">Home <span class = "sr-only">(current)</span></a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <li class = "nav-item dropdown">
+                            <a class = "nav-link dropdown-toggle" href = "#" id = "navbarDropdownMenuLink" role = "button" data-toggle = "dropdown" aria-haspopup = "true" aria-expanded = "false">
                                 Categorieën
                             </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <div class = "dropdown-menu" aria-labelledby = "navbarDropdownMenuLink">
                                 <?php
                                 $row = $conn->query("SELECT DISTINCT SG.StockGroupName, SG.StockGroupID FROM stockgroups SG JOIN stockitemstockgroups SISG on SG.StockGroupID = SISG.StockGroupID ORDER BY SG.StockGroupID");
                                 while ($artikel = $row->fetch()) {
@@ -68,11 +83,11 @@ function clean($string) {
                         <li class="nav-item">
                             <a class="nav-link" href="#">Contact</a>
                         </li>
-                         <form class="form-inline" action="zoek.php" method="get">
-                        <input class="form-control mr-sm-2" type="search" placeholder="Zoek artikel..." aria-label="Search" name="zoek">
-                        <button class="btn btn-primary" type="submit" name="zoekKnop">Zoeken</button>
-			</form>
-			  <li class="nav-item">
+                        <form class="form-inline" action="zoek.php" method="get">
+                            <input class="form-control mr-sm-2" type="search" placeholder="Zoek artikel..." aria-label="Search" name="zoek">
+                            <button class="btn btn-primary" type="submit" name="zoekKnop">Zoeken</button>
+                        </form>
+                        <li class="nav-item">
                             <a class="nav-link" href="winkelwagen.php">Winkelmand</a>
                         </li>
                     </ul>
@@ -93,35 +108,36 @@ function clean($string) {
                     </div>
                 </div>
 
-            <?php } print($derdePartij); 
-	    
-	      if(empty($_SESSION['winkelwagen'])){
-	$_SESSION['winkelwagen'] = array();
-	?>
-	<form action="winkelwagen.php" method="get">
-	<input type="hidden" value="<?php echo $artikelID; ?>" name="artikelid">
-	<input type="number" name="number">
-	<input type="submit" value="Aan winkelmand toevoegen">
-	</form>
-	
-	<?php
-	}
-	
-	foreach($_SESSION['winkelwagen'] as $key => $value){
-	   if($artikelID == $value){
-	   echo ' <br> U heeft dit artikel al in uw winkelwagen staan';
-	   $exists = "";
-		} 
-	   }
-	   if(!isset($exists) && !empty($_SESSION['winkelwagen'])) {
-	   ?>
-	
-	<form action="winkelwagen.php" method="get">
-	<input type="hidden" value="<?php echo $artikelID; ?>" name="artikelid">
-	<input type="number" name="number">
-	<input type="submit" value="Aan winkelmand toevoegen">
-	</form>
-	<?php   } ?>
+                <?php
+            } print($derdePartij);
+
+            if (empty($_SESSION['winkelwagen'])) {
+                $_SESSION['winkelwagen'] = array();
+                ?>
+                <form action="winkelwagen.php" method="get">
+                    <input type="hidden" value="<?php echo $artikelID; ?>" name="artikelid">
+                    <input type="number" name="number">
+                    <input type="submit" value="Aan winkelmand toevoegen">
+                </form>
+
+                <?php
+            }
+
+            foreach ($_SESSION['winkelwagen'] as $key => $value) {
+                if ($artikelID == $value) {
+                    echo ' <br> U heeft dit artikel al in uw winkelwagen staan';
+                    $exists = "";
+                }
+            }
+            if (!isset($exists) && !empty($_SESSION['winkelwagen'])) {
+                ?>
+
+                <form action="winkelwagen.php" method="get">
+                    <input type="hidden" value="<?php echo $artikelID; ?>" name="artikelid">
+                    <input type="number" name="number">
+                    <input type="submit" value="Aan winkelmand toevoegen">
+                </form>
+            <?php } ?>
             <!-- Optional JavaScript -->
             <!-- jQuery first, then Popper.js, then Bootstrap JS -->
             <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

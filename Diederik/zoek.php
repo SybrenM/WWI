@@ -1,6 +1,11 @@
 <?php
 include 'session.php';
 $zoek = filter_input(INPUT_GET, "zoek", FILTER_SANITIZE_STRING);
+
+function like_match($pattern, $subject) {
+    $pattern = str_replace('%', '.*', preg_quote($pattern, '/'));
+    return (bool) preg_match("/^{$pattern}$/i", $subject);
+}
 ?>
 
 <!DOCTYPE html>
@@ -63,23 +68,30 @@ $zoek = filter_input(INPUT_GET, "zoek", FILTER_SANITIZE_STRING);
                     $search = $_GET['zoek'];
                     $query = $conn->query("SELECT * FROM stockitems WHERE StockItemName LIKE '%" . $search . "%' OR SearchDetails LIKE '%" . $search . "%'");
                     $count = $query->rowCount();
+                    $artikelNaamTweedeKeer = '';
                     while ($row = $query->fetch()) {
-						$artikelNaam = $row["StockItemName"];
+                        $artikelNaam = $row["StockItemName"];
                         $artikelID = $row["StockItemID"];
                         $artikelPrijs = $row["RecommendedRetailPrice"];
-						$queryTwee = $conn->query("SELECT * FROM stockitems STI WHERE Size LIKE '%S' OR '%M' OR '%L'");
-						While $rowTwee = $queryTwee->fetch()) {
-							$OuterPackageID = $rowTwee["OuterPackageID"] 
-							
-							
-							
-						}
+                        $artikelMaat = $row["Size"];
+                        $Small = like_match('%S', $artikelMaat);
+                        $Medium = like_match('M', $artikelMaat);
+                        $Large = like_match('%L', $artikelMaat);
+                        if ($Small OR $Medium OR $Large) {
+                            $artikelNaam = str_replace(") " . $artikelMaat, '', $artikelNaam);
+                            $artikelNaam = $artikelNaam . ")";
+                            if ($artikelNaam != $artikelNaamTweedeKeer) {
+                                $artikelNaamTweedeKeer = $artikelNaam;
+                            } else {
+                                goto a;
+                            }
+                        }
                         if (isset($artikelID)) {
                             ?>
 
                             <div class="row">
                                 <div class="col-lg-4">
-                                     <?php $fotoID = rand(1, 18); ?>
+                                    <?php $fotoID = rand(1, 18); ?>
                                     <img src="artikelFoto/<?php print($fotoID); ?>.jpg" class="artikelImg">
                                 </div>
                                 <div class="col-lg-4">
@@ -90,10 +102,11 @@ $zoek = filter_input(INPUT_GET, "zoek", FILTER_SANITIZE_STRING);
                                 </div>
                                 <hr style="width:75%">
                             </div> <?php
+                            a:
                         }
                     }
                     if ($count == 0) {
-                        echo 'Geen zoekresultaten gevonden voor: \''.$zoek."'";
+                        echo 'Geen zoekresultaten gevonden voor: \'' . $zoek . "'";
                     }
                 } catch (PDOException $e) {
                     print "Error!: " . $e->getMessage() . "<br/>";

@@ -2,6 +2,10 @@
 include 'session.php';
 $categorie = filter_input(INPUT_GET, "categorie", FILTER_SANITIZE_STRING);
 
+function like_match($pattern, $subject) {
+    $pattern = str_replace('%', '.*', preg_quote($pattern, '/'));
+    return (bool) preg_match("/^{$pattern}$/i", $subject);
+} 
 ?>
 
 <!DOCTYPE html>
@@ -65,17 +69,31 @@ $categorie = filter_input(INPUT_GET, "categorie", FILTER_SANITIZE_STRING);
         <div class="container">
             <h1>
                 <?php
-                $row = $conn->query("SELECT * FROM stockitems SI JOIN stockitemstockgroups SISG on SI.StockItemID = SISG.StockItemID WHERE SISG.StockgroupID = " . $categorie);
-                while ($artikel = $row->fetch()) {
-                    $artikelNaam = $artikel["StockItemName"];
-                    $artikelID = $artikel["StockItemID"];
-                    $artikelPrijs = $artikel["RecommendedRetailPrice"];
+                $query = $conn->query("SELECT * FROM stockitems SI JOIN stockitemstockgroups SISG on SI.StockItemID = SISG.StockItemID WHERE SISG.StockgroupID = " . $categorie);
+                $artikelNaamTweedeKeer = '';
+                while ($row = $query->fetch()) {
+                    $artikelNaam = $row["StockItemName"];
+                    $artikelID = $row["StockItemID"];
+                    $artikelPrijs = $row["RecommendedRetailPrice"];
+                    $artikelMaat = $row["Size"];
+                    $Small = like_match('%S', $artikelMaat);
+                    $Medium = like_match('M', $artikelMaat);
+                    $Large = like_match('%L', $artikelMaat);
+                    if ($Small OR $Medium OR $Large) {
+                        $artikelNaam = str_replace(") " . $artikelMaat, '', $artikelNaam);
+                        $artikelNaam = $artikelNaam . ")";
+                        if ($artikelNaam != $artikelNaamTweedeKeer) {
+                            $artikelNaamTweedeKeer = $artikelNaam;
+                        } else {
+                            goto a;
+                        }
+                    }
 
                     if (isset($artikelID)) {
                         ?>         
                         <div class="row">
                             <div class="col-lg-4 col-md-4 col-sm-12">
-                            <?php $fotoID = rand(1, 18); ?>
+                                <?php $fotoID = rand(1, 18); ?>
                                 <img src="artikelFoto/<?php print($fotoID); ?>.jpg"  class="artikelImg">
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-12">
@@ -88,6 +106,7 @@ $categorie = filter_input(INPUT_GET, "categorie", FILTER_SANITIZE_STRING);
                         </div>
 
                         <?php
+                        a:
                     } else {
                         print("Niks gevonden.");
                     }
