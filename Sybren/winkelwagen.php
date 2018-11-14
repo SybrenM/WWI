@@ -105,9 +105,13 @@ $selectProducts = implode(',', $_SESSION['winkelwagen']);
         $artikelID = $artikel["StockItemID"];
         $artikelPrijs = $artikel["RecommendedRetailPrice"];
 
-	if(isset($_SESSION['aantal'][$i])){
-	$totalePrijs += $artikelPrijs *  $_SESSION['aantal'][$i];  //totale prijs berekening
+	foreach($_SESSION['winkelwagen'] as $key => $value){
+//Als de session Key van winkelwagen met de opteller '$i' gelijk is aan de session Key van winkelwagen
+if($keys[$i] == $key){
+	$totalePrijs += $artikelPrijs *  $_SESSION['aantal'][$key];  //totale prijs berekening
 	}
+	}
+
 
 	
 
