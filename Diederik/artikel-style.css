@@ -1,12 +1,12 @@
 body {
     background-color: #FFF !important;
-    
-    
+
+
 }
 .container {
     background-color: #FFF !important;
 
-    
+
 }
 
 .artikel {
@@ -14,5 +14,10 @@ body {
 }
 
 .artikelImg{
-        max-width: 100%;
+    max-width: 100%;
+}
+.kleur {
+    background-color: #1a75ff !important;
+    color: #FFF;
+
 }
