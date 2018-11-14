@@ -1,13 +1,7 @@
 <?php
 session_start();
-//$artikelID = filter_input(INPUT_GET, "artikelid", FILTER_SANITIZE_STRING);
 include 'connection.php';
 $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
-
-function clean($string) {
-   $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
-   return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
-}
 ?>
 <!doctype html>
 <html lang="en">
@@ -77,6 +71,8 @@ function clean($string) {
 
 	    <h1> Winkelmand </h1>
     <?php
+    
+    // Als session leeg is, maak een nieuwe array
 if(empty($_SESSION['winkelwagen'])){
 	$_SESSION['winkelwagen'] = array();
 	}
@@ -84,6 +80,8 @@ if(empty($_SESSION['winkelwagen'])){
 	$_SESSION['aantal'] = array();
 	}
 	
+	
+	// Als artikel  aantal groter dan 1 is, pushen we het aantal en artikel in een session array
 	if(isset($_POST['artikelid']) && isset($_POST['number']) && $_POST['number'] >= 1){
 	array_push($_SESSION['winkelwagen'], $_POST['artikelid']);
 	array_push($_SESSION['aantal'], $_POST['number']);
@@ -93,25 +91,14 @@ if(empty($_SESSION['winkelwagen'])){
    }
    
    
-   foreach($_SESSION['winkelwagen'] as $key => $value){
-	foreach($_SESSION['aantal'] as $key1 => $value1){
-	if($key == $key1){
-	$counter = $key;
-	}
-	}
-}
    if(!empty($_SESSION['winkelwagen'])){
-   
-   
 $selectProducts = implode(',', $_SESSION['winkelwagen']);
     $row = $conn->query("SELECT * FROM stockitems SI JOIN suppliers S on SI.supplierID = S.supplierID WHERE SI.stockitemid IN (".$selectProducts.")");
-    $i = 0;
-    $totalePrijs = 0;
-
-    print_r($_SESSION['winkelwagen']);
-	print_r($_SESSION['aantal']);
-	$keys = array_keys($_SESSION['winkelwagen']);
-        asort($_SESSION['winkelwagen']);
+    $i = 0;   //opteller key van Session array
+    $totalePrijs = 0; 
+    
+	$keys = array_keys($_SESSION['winkelwagen']); 
+        asort($_SESSION['winkelwagen']); //waardes sorteren in Session array "winkelwagen"
 
     while ($artikel = $row->fetch(PDO::FETCH_ASSOC)) {
         $artikelNaam = $artikel["StockItemName"];
@@ -119,7 +106,7 @@ $selectProducts = implode(',', $_SESSION['winkelwagen']);
         $artikelPrijs = $artikel["RecommendedRetailPrice"];
 
 	if(isset($_SESSION['aantal'][$i])){
-	$totalePrijs += $artikelPrijs *  $_SESSION['aantal'][$i];
+	$totalePrijs += $artikelPrijs *  $_SESSION['aantal'][$i];  //totale prijs berekening
 	}
 
 	
@@ -130,10 +117,7 @@ $selectProducts = implode(',', $_SESSION['winkelwagen']);
                 <div class="row">
                     <div class="col-lg-4">
                         Product: <?php
-	
 	print $artikelNaam;
-
-			
 			?> 
 		</div>
 		<div class="col-lg-2">
@@ -141,12 +125,8 @@ $selectProducts = implode(',', $_SESSION['winkelwagen']);
                     </div>
 		<div class="col-lg-3">
 		    <div> Aantal: <?php
-	
-
-$counting = count($_SESSION['winkelwagen']);
-
 foreach($_SESSION['winkelwagen'] as $key => $value){
-
+//Als de session Key van winkelwagen met de opteller '$i' gelijk is aan de session Key van winkelwagen
 if($keys[$i] == $key){
 echo ($_SESSION['aantal'][$key]);
 }
@@ -160,9 +140,9 @@ echo ($_SESSION['aantal'][$key]);
 		</div>
 
             <?php $i++;
-	    } 
+	    }   //sluiting while loop
 	    
-	    }
+	    } 
 	    ?>
 	    <?php if(isset($totalePrijs)){ ?>
 	    <div class="row">
