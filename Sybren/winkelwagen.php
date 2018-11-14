@@ -117,11 +117,7 @@ $selectProducts = implode(',', $_SESSION['winkelwagen']);
         $artikelNaam = $artikel["StockItemName"];
         $artikelID = $artikel["StockItemID"];
         $artikelPrijs = $artikel["RecommendedRetailPrice"];
-	$artikelAantal = $artikel["amount"];
-	
-	if(isset($_SESSION['aantal'][$i])) { 
-	$artikelAantal = $artikel["amount"] + $_SESSION['aantal'][$i];
-	}
+
 	if(isset($_SESSION['aantal'][$i])){
 	$totalePrijs += $artikelPrijs *  $_SESSION['aantal'][$i];
 	}
