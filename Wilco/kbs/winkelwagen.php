@@ -1,7 +1,8 @@
 <?php
 session_start();
-$artikelID = filter_input(INPUT_GET, "artikelid", FILTER_SANITIZE_STRING);
+//$artikelID = filter_input(INPUT_GET, "artikelid", FILTER_SANITIZE_STRING);
 include 'connection.php';
+$number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
 
 function clean($string) {
    $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
@@ -30,15 +31,7 @@ function clean($string) {
         </style>
         <title>Hello, world!</title>
     </head>
-    <?php
-    $row = $conn->query("SELECT * FROM stockitems SI JOIN suppliers S on SI.supplierID = S.supplierID WHERE SI.stockitemid = " . $artikelID);
-    while ($artikel = $row->fetch()) {
-        $artikelNaam = $artikel["StockItemName"];
-        $artikelID = $artikel["StockItemID"];
-        $artikelPrijs = $artikel["RecommendedRetailPrice"];
-        $slogan = $artikel["MarketingComments"];
-        $derdePartij = $artikel["SupplierName"];
-        ?>
+
         <body>
             <nav class="navbar navbar-expand-lg navbar-light">
                 <a class="navbar-brand" href="index.php">WideWorldImporters</a>
@@ -63,6 +56,7 @@ function clean($string) {
                                     ?>
                                     <a class="dropdown-item" href="categorie.php<?php print("?categorie=" . $categorieID); ?>"><?php print($categorieNaam); ?></a>
                                 <?php } ?>
+
                             </div>
                         </li>
                         <li class="nav-item">
@@ -72,56 +66,71 @@ function clean($string) {
                         <input class="form-control mr-sm-2" type="search" placeholder="Zoek artikel..." aria-label="Search" name="zoek">
                         <button class="btn btn-primary" type="submit" name="zoekKnop">Zoeken</button>
 			</form>
-			  <li class="nav-item">
-                            <a class="nav-link" href="winkelwagen.php">Winkelmand</a>
-                        </li>
                     </ul>
                 </div>
             </nav>
-
-
-
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-6">
-                        <img src="artikelFoto/placeholder.jpg" class="artikelImg">
-                    </div>
-                    <div class="col-lg-6">
-                        Product: <?php print($artikelNaam); ?> 
-                        <div class="prijs">Prijs: <?php print("€" . $artikelPrijs); ?> </div>
-                        <div class="description">Extra informatie: <?php print($slogan); ?> </div>
-                    </div>
-                </div>
-
-            <?php } print($derdePartij); 
 	    
-	      if(empty($_SESSION['winkelwagen'])){
+	                <div class="container">
+
+	    <h1> Winkelmand </h1>
+    <?php
+if(empty($_SESSION['winkelwagen'])){
 	$_SESSION['winkelwagen'] = array();
-	?>
-	<form action="winkelwagen.php" method="get">
-	<input type="hidden" value="<?php echo $artikelID; ?>" name="artikelid">
-	<input type="number" name="number">
-	<input type="submit" value="Aan winkelmand toevoegen">
-	</form>
-	
-	<?php
 	}
-	
-	foreach($_SESSION['winkelwagen'] as $key => $value){
-	   if($artikelID == $value){
-	   echo ' <br> U heeft dit artikel al in uw winkelwagen staan';
-	   $exists = "";
-		} 
-	   }
-	   if(!isset($exists) && !empty($_SESSION['winkelwagen'])) {
-	   ?>
-	
-	<form action="winkelwagen.php" method="get">
-	<input type="hidden" value="<?php echo $artikelID; ?>" name="artikelid">
-	<input type="number" name="number">
-	<input type="submit" value="Aan winkelmand toevoegen">
-	</form>
-	<?php   } ?>
+    if(empty($_SESSION['aantal'])){
+	$_SESSION['aantal'] = array();
+	}
+	if(isset($_GET['artikelid']) && isset($_GET['number'])){
+array_push($_SESSION['winkelwagen'], $_GET['artikelid']);
+array_push($_SESSION['aantal'], $_GET['number']);
+   }
+   
+   foreach($_SESSION['winkelwagen'] as $key => $value){
+	foreach($_SESSION['aantal'] as $key1 => $value1){
+	if($key == $key1){
+	$counter = $key;
+	}
+	}
+}
+   if(!empty($_SESSION['winkelwagen'])){
+$selectProducts = implode(',', $_SESSION['winkelwagen']);
+    $row = $conn->query("SELECT * FROM stockitems SI JOIN suppliers S on SI.supplierID = S.supplierID WHERE SI.stockitemid IN (".$selectProducts.")");
+    $i = 0;
+    $totalePrijs = 0;
+    while ($artikel = $row->fetch(PDO::FETCH_ASSOC)) {
+        $artikelNaam = $artikel["StockItemName"];
+        $artikelID = $artikel["StockItemID"];
+        $artikelPrijs = $artikel["RecommendedRetailPrice"];
+	if(isset($_SESSION['aantal'][$i])){
+	$totalePrijs += $artikelPrijs *  $_SESSION['aantal'][$i];
+	}
+	        ?>
+
+
+                <div class="row">
+                    <div class="col-lg-4">
+                        Product: <?php print($artikelNaam); ?> 
+		</div>
+		<div class="col-lg-2">
+                        <div>Prijs: <?php print("€" . $artikelPrijs); ?> </div>
+                    </div>
+		<div class="col-lg-3">
+		    <div> Aantal: <?php
+if(isset($_SESSION['aantal'][$i])){		    echo $_SESSION['aantal'][$i];} ?></div>
+                     </div>
+		<div class="col-lg-3">
+		<a href="verwijderArtikel.php?id=<?php echo $artikelID ?>&aantal=<?php echo $i; ?>">Verwijder</a>
+		</div>
+		</div>
+
+            <?php $i++;} 
+	    ?>
+	    <div class="row">
+		<div class="col-lg-6">
+			<div> Totale prijs: <?php echo "€".number_format($totalePrijs, 2); }?> </div>
+		</div>
+		</div>
+	    </div>
             <!-- Optional JavaScript -->
             <!-- jQuery first, then Popper.js, then Bootstrap JS -->
             <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
