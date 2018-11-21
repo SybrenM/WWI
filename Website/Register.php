@@ -3,6 +3,7 @@
 include 'session.php';
 require 'connection.php';
 
+
 if (isset($_POST['register'])) {
     $errMsg = '';
 //Hier wordt de ingevulde informatie opgehaald en gedefinieerd//
@@ -33,17 +34,29 @@ if (isset($_POST['register'])) {
     }
     if ($errMsg == '') {
         $fullName = $voornaam . $achternaam;
+	$stmt = $conn->prepare('SELECT COUNT(EmailAddress) as Email FROM people WHERE EmailAddress = :email');
+	 $stmt->execute(array(
+            ':email' => $email
+        ));
+	
+	while($query = $stmt->fetch()){
+	$countEmail = $query["Email"];
+	}
+	if($countEmail < 1) {
         try {
             $stmt = $conn->prepare('INSERT INTO people (PersonID, FullName, EmailAddress, HashedPassword, LastEditedBy) VALUES (:ID, :naam, :email, :wachtwoord, 1)');
             $stmt->execute(array(
                 //De ingevulde informatie wordt in de database gezet//
                 ':naam' => $fullName, ':wachtwoord' => $passwordhash, ':email' => $email, ':ID' => $klantID));
-            header('Location: Register.php?action=joined');
+         //   header('Location: Register.php?action=joined');
             exit;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
+	} else{
+	echo "Deze emailadres is a geregistreerd";
     }
+}
 }
 //Als op de "register' knop wordt gedrukt dan wordt een button zichtbaar die je herleid naar de homepage//
 if (isset($_GET['action']) && $_GET['action'] == 'joined') {
