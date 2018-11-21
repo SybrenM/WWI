@@ -2,8 +2,8 @@
 session_start();
 include 'connection.php';
 $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
-//if(isset($_POST["Voornaam"]) && isset($_POST['email']) && isset($_POST['address']) && isset($_POST['city']) && isset($_POST['zip']) && isset($_POST['land']) && isset($_POST['telefoonnummer'])){
-//$_SESSION['Voornaam'] = $_POST['Voornaam'];
+//if(isset($_POST["Naam"]) && isset($_POST['email']) && isset($_POST['address']) && isset($_POST['city']) && isset($_POST['zip']) && isset($_POST['land']) && isset($_POST['telefoonnummer'])){
+//$_SESSION['Naam'] = $_POST['Naam'];
 //$_SESSION['email'] = $_POST['email'];
 //$_SESSION['address'] = $_POST['address'];
 //$_SESSION['city'] = $_POST['city'];
@@ -39,9 +39,9 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                             <div class="col-50">
                                 <h3>Betaal adres</h3>
                                 <label for="fname"><i class="fa fa-user"></i> Naam</label>
-                                <input type="text" id="fname" name="Voornaam" placeholder="Henk de Groot" value="<?php
-                                if (isset($_POST["Voornaam"])) {
-                                    echo ($_POST["Voornaam"]);
+                                <input type="text" id="fname" name="Naam" placeholder="Henk de Groot" value="<?php
+                                if (isset($_POST["Naam"])) {
+                                    echo ($_POST["Naam"]);
                                 }
                                 ?>" required>
                                 <label for="email"><i class="fa fa-envelope"></i> Email</label>
@@ -225,8 +225,8 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
 
                     <form action="succes.php" method="POST">
                         <div class="container check">
-                            <input type="hidden" name="Voornaam" value="<?php echo $_POST["Voornaam"]; ?>">
-                            <div><strong>Voornaam:</strong> <?php echo $_POST["Voornaam"]; ?> </div> 
+                            <input type="hidden" name="Naam" value="<?php echo $_POST["Naam"]; ?>">
+                            <div><strong>Naam:</strong> <?php echo $_POST["Naam"]; ?> </div> 
 
                             <input type="hidden" name="email" value="<?php echo $_POST["email"]; ?>">
                             <div><strong>E-mail: </strong><?php echo $_POST["email"]; ?> </div>
@@ -254,7 +254,7 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
 
                             <input type="hidden" name="land" value="<?php echo $_POST["land"]; ?>">    
                             <div><strong>Land:</strong> <?php echo $_POST["land"]; ?> </div>
-
+                            <div><I>Door op de knop "Naar IDEAL betaalpagina" te klikken ga je akkoort met de bestelling en de ingevoerde gegevens.</I></div>
                             <input type="submit" class="btn btn-primary btn-success" data-target="#exampleModalCenter" name="betalen" value="Naar IDEAL betaalpagina">
                             </form>
                         </div>     
