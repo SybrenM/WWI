@@ -1,12 +1,4 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title></title>
-    </head>
-    <body>
-       <!-- Hier begint de navbar-->
-        <!-- Hier is het logo -->
+
         <nav class="navbar navbar-expand-lg navbar-light">
             <a class="navbar-brand" href="index.php">WideWorldImporters</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -15,9 +7,9 @@
             <!-- Hier is de home-knop -->
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav">
-                    <li class="nav-item active">
+                    <!--<li class="nav-item active">
                         <a class="nav-link" href="index.php">Home <span class="sr-only">(current)</span></a>
-                    </li>
+                    </li>-->
                     <!-- Hier is de dropdown menu van de categoriën -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -41,13 +33,14 @@
                     </li>
                     <!-- Hier zit de zoekfunctie -->
                     <form class="form-inline" action="zoek.php">
-                        <input class="form-control mr-sm-2" type="search" placeholder="Zoek artikel..." aria-label="Search" name="zoek">
-                        <button class="btn btn-primary" type="submit" name="zoekKnop">Zoeken</button>
+                        <input class="form-control mr-sm-2" type="search" placeholder="<?php if(isset($_GET["zoek"])) { print($_GET["zoek"]); } else { print("Zoek artikel..."); }?>" aria-label="Search" name="zoek">
+                        <button class="btn btn-primary" type="submit">Zoeken</button>
 
 
                     </form>
+                    <li class="nav-item">
+                        <a class="nav-link" href="winkelwagen.php">Winkelmand</a>
+                    </li>
                 </ul>
             </div>
         </nav>
-    </body>
-</html>

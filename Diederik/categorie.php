@@ -1,12 +1,8 @@
 <?php
 include 'session.php';
 include 'connection.php';
+include 'functions.php';
 $categorie = filter_input(INPUT_GET, "categorie", FILTER_SANITIZE_STRING);
-
-function like_match($pattern, $subject) {
-    $pattern = str_replace('%', '.*', preg_quote($pattern, '/'));
-    return (bool) preg_match("/^{$pattern}$/i", $subject);
-}
 ?>
 
 <!DOCTYPE html>
@@ -40,7 +36,19 @@ function like_match($pattern, $subject) {
                     $Small = like_match('%S', $artikelMaat);
                     $Medium = like_match('M', $artikelMaat);
                     $Large = like_match('%L', $artikelMaat);
+                    $LengteEen = like_match('%.%m', $artikelMaat);
+                    $LengteTwee = like_match('%0m', $artikelMaat);
+                    $LengteDrie = like_match('%x%m', $artikelMaat);
                     //Hier wordt gekeken of er tussen de artikelen iets zit met een maatje S, M of L. Hiervan wordt er maar één weergegeven tussen de resultaten. De maat kan dan pas op de artikelpagina zelf worden gekozen.
+                    if ($LengteEen OR $LengteTwee OR $LengteDrie) {
+                        $artikelNaam = str_replace($artikelMaat, '', $artikelNaam);
+                        $artikelNaam = $artikelNaam;
+                        if ($artikelNaam != $artikelNaamTweedeKeer) {
+                            $artikelNaamTweedeKeer = $artikelNaam;
+                        } else {
+                            goto a;
+                        }
+                    }
                     if ($Small OR $Medium OR $Large) {
                         $artikelNaam = str_replace(") " . $artikelMaat, '', $artikelNaam);
                         $artikelNaam = $artikelNaam . ")";
@@ -54,20 +62,21 @@ function like_match($pattern, $subject) {
                     if (isset($artikelID)) {
                         ?>         
                         <!-- Hier komt een rij voor één artikel met, van links naar rechts: foto, naam, prijs -->
-                        <div class="row">
-                            <div class="col-lg-4 col-md-4 col-sm-12">
-                                <?php $fotoID = rand(1, 18); ?>
-                                <img src="artikelFoto/<?php print($fotoID); ?>.jpg"  class="artikelImg">
+                        <a href="artikel.php?artikelid=<?php print($artikelID . "&maatselected=FALSE"); ?>" class="artikelTekst">
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-12">
+                                    <?php $fotoID = rand(1, 17); ?>
+                                    <img src="artikelFoto/<?php print($fotoID); ?>.jpg"  class="artikelImg">
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-12">
+                                    <h5><?php print($artikelNaam); ?></h5>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-12">
+                                    <?php print("<h3 class='artikelPrijs'>€" . $artikelPrijs . "</h3>"); ?>
+                                </div>
+                                <hr style="width:80%">
                             </div>
-                            <div class="col-lg-4 col-md-4 col-sm-12">
-                                <a href="artikel.php?artikelid=<?php print($artikelID."&maatselected=FALSE"); ?>" class="artikelTekst"><h5><?php print($artikelNaam); ?></h5></a>
-                            </div>
-                            <div class="col-lg-4 col-md-4 col-sm-12">
-                                <?php print("<h3 class='artikelPrijs'>€" . $artikelPrijs . "</h3>"); ?>
-                            </div>
-                            <hr style="width:75%">
-                        </div>
-
+                        </a>
                         <?php
                         a:
                     } else {
@@ -76,10 +85,11 @@ function like_match($pattern, $subject) {
                 }
                 ?>
         </div>
+        <div class=""
 
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
     </body>
 </html>

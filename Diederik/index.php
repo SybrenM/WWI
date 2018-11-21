@@ -1,6 +1,8 @@
 <?php
+//Hier bevindt zich de belangrijste core van onze website: Sessies, de connectie met de database, en functies
 include 'session.php';
 include 'connection.php';
+include 'functions.php';
 ?>
 
 <!DOCTYPE html>
@@ -19,10 +21,12 @@ include 'connection.php';
         <!-- -->
         <div class="container">
             <div class="row">
+                <!-- Hier komt de grote hoofdfoto -->
                 <div class="col-lg-12 bigPicture">
                     <img src="artikelFoto/placeholder.jpg" alt="placeholder1" height="500px" width="100%">
                 </div>       
-            </div>   
+            </div>  
+            <!-- In deze row komen 3 kleine fototjes -->
             <div class="row"> 
                 <div class="col-lg-4 smallPicture">
                     <img src="artikelFoto/placeholder.jpg" alt="placeholder1"  height="300px" width="100%">
