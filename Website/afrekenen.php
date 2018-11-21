@@ -43,31 +43,31 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                                 if (isset($_POST["Voornaam"])) {
                                     echo ($_POST["Voornaam"]);
                                 }
-                                ?>">
+                                ?>" required>
                                 <label for="email"><i class="fa fa-envelope"></i> Email</label>
                                 <input type="text" id="email" name="email" placeholder="hdegroot@example.com" value="<?php
                                 if (isset($_POST["email"])) {
                                     echo ($_POST["email"]);
                                 }
-                                ?>">
+                                ?>" required>
                                 <label for="adr"><i class="fa fa-address-card-o"></i> Adres</label>
                                 <input type="text" id="adr" name="address" placeholder="Dorpstraat 14" value="<?php
                                 if (isset($_POST["address"])) {
                                     echo ($_POST["address"]);
                                 }
-                                ?>">
+                                ?>" required>
                                 <label for="city"><i class="fa fa-institution"></i> Plaats</label>
                                 <input type="text" id="city" name="city" placeholder="Zwolle" value="<?php
                                 if (isset($_POST["city"])) {
                                     echo ($_POST["city"]);
                                 }
-                                ?>">
+                                ?>" required>
                                 <label for="land"><i class="fa"></i> Land</label>
                                 <input type="text" id="land" name="land" placeholder="Nederland" value="<?php
                                 if (isset($_POST["land"])) {
                                     echo ($_POST["land"]);
                                 }
-                                ?>">
+                                ?>" required>
 
                                 <div class="row">
                                     <div class="col-50">
@@ -76,13 +76,13 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                                         if (isset($_POST["zip"])) {
                                             echo ($_POST["zip"]);
                                         }
-                                        ?>">
+                                        ?>" required>
                                         <label for="telefoonnummer"><i class="fa"></i> Telefoonnummer</label>
                                         <input type="text" id="telefoonnummer" name="telefoonnummer" placeholder="0623478282" value="<?php
                                         if (isset($_POST["telefoonnummer"])) {
                                             echo ($_POST["telefoonnummer"]);
                                         }
-                                        ?>">
+                                        ?>" required>
 
                                     </div>
                                 </div>
@@ -99,13 +99,13 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                                 if (isset($_POST["cardname"])) {
                                     echo ($_POST["cardname"]);
                                 }
-                                ?>">
+                                ?>" required>
                                 <label for="ccnum">IBAN</label>
                                 <input type="text" id="ccnum" name="IBAN" placeholder="NL70 RABO 0123 4567 89" value="<?php
                                 if (isset($_POST["IBAN"])) {
                                     echo ($_POST["IBAN"]);
                                 }
-                                ?>">
+                                ?>" required>
                                 <div class="row">
                                     <div class="col-50">
                                         <label for="pasnummer">Pasnummer</label>
@@ -113,7 +113,7 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                                         if (isset($_POST["pasnummer"])) {
                                             echo ($_POST["pasnummer"]);
                                         }
-                                        ?>">
+                                        ?>" required>
                                     </div>
                                 </div>
                             </div>

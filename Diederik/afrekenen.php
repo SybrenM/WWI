@@ -101,7 +101,7 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                                 }
                                 ?>">
                                 <label for="ccnum">IBAN</label>
-                                <input type="text" id="ccnum" name="IBAN" placeholder="NL70 RABO 0123 4567 89" value="<?php
+                                <input type="text" id="ccnum" name="IBAN" placeholder="NL** RABO 0123 4567 89" value="<?php
                                 if (isset($_POST["IBAN"])) {
                                     echo ($_POST["IBAN"]);
                                 }
@@ -120,7 +120,7 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
 
                         </div>
                         <!-- Button trigger modal -->
-                        <input type="submit" class="btn btn-primary btn-success" data-target="#exampleModalCenter" name="afreken" value="Controleer uw gegevens">
+                        <input type="submit" class="btn btn-primary btn-success" data-target="#exampleModalCenter" name="afreken" value="Door naar afrekenen">
                     </form>
                     <!-- Modal -->
 
