@@ -41,6 +41,21 @@
                     <li class="nav-item">
                         <a class="nav-link" href="winkelwagen.php">Winkelmand</a>
                     </li>
+		    		<?php if(!isset($_SESSION['email'])){?>
+
+		<li class="nav-item">
+                        <a class="nav-link" href="LoginMain.php">Inloggen</a>
+                    </li>
+
+		    <li class="nav-item">
+                        <a class="nav-link" href="Register.php">Registreren</a>
+                    </li>
+		    <?php } ?>
+		    <?php if(isset($_SESSION['email'])){?>
+		    <li class="nav-item">
+		    <a class="nav-link" href="logout.php">Uitloggen</a>
+		    </li>
+		    <?php } ?>
                 </ul>
             </div>
         </nav>
