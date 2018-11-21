@@ -7,18 +7,18 @@ include 'connection.php';
 $row = $conn->query("SELECT * FROM stockitems WHERE StockItemID = ".$id);
     while ($artikel = $row->fetch()) {
 	foreach($_SESSION['winkelwagen'] as $key => $value){
-		if($value == $artikel["StockItemID"]){
+					if($value == $artikel["StockItemID"]){
 
+			$keys = array_keys($_SESSION['winkelwagen']);
+				if($keys[$aantal] == $key){
+				echo "Aantal :". $_SESSION['aantal'][$key];
+				unset ( $_SESSION['aantal'][$key]);
 			unset($_SESSION['winkelwagen'][$key]);
-			foreach($_SESSION['aantal'] as $key1 => $value1){
-				if($key1 == $aantal){
-				unset ( $_SESSION['aantal'][$aantal]);
-				$_SESSION['aantal'] = array_values($_SESSION['aantal']);
 				header("Location: winkelwagen.php");
 
 			}
 			
-		}
+		//}
     }
 
 }

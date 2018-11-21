@@ -98,7 +98,7 @@ function clean($string) {
 	      if(empty($_SESSION['winkelwagen'])){
 	$_SESSION['winkelwagen'] = array();
 	?>
-	<form action="winkelwagen.php" method="get">
+	<form action="winkelwagen.php" method="post">
 	<input type="hidden" value="<?php echo $artikelID; ?>" name="artikelid">
 	<input type="number" name="number">
 	<input type="submit" value="Aan winkelmand toevoegen">
@@ -116,7 +116,7 @@ function clean($string) {
 	   if(!isset($exists) && !empty($_SESSION['winkelwagen'])) {
 	   ?>
 	
-	<form action="winkelwagen.php" method="get">
+	<form action="winkelwagen.php" method="post">
 	<input type="hidden" value="<?php echo $artikelID; ?>" name="artikelid">
 	<input type="number" name="number">
 	<input type="submit" value="Aan winkelmand toevoegen">

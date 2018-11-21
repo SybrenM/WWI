@@ -54,9 +54,10 @@ $categorie = filter_input(INPUT_GET, "categorie", FILTER_SANITIZE_STRING);
                     <form class="form-inline" action="zoek.php">
                         <input class="form-control mr-sm-2" type="search" placeholder="Zoek artikel..." aria-label="Search" name="zoek">
                         <button class="btn btn-primary" type="submit" name="zoekKnop">Zoeken</button>
-
-
                     </form>
+		      <li class="nav-item">
+                            <a class="nav-link" href="winkelwagen.php">Winkelmand</a>
+                        </li>
                 </ul>
             </div>
         </nav>

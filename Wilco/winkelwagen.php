@@ -1,13 +1,7 @@
 <?php
 session_start();
-//$artikelID = filter_input(INPUT_GET, "artikelid", FILTER_SANITIZE_STRING);
 include 'connection.php';
 $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
-
-function clean($string) {
-   $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
-   return preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
-}
 ?>
 <!doctype html>
 <html lang="en">
@@ -66,6 +60,9 @@ function clean($string) {
                         <input class="form-control mr-sm-2" type="search" placeholder="Zoek artikel..." aria-label="Search" name="zoek">
                         <button class="btn btn-primary" type="submit" name="zoekKnop">Zoeken</button>
 			</form>
+			  <li class="nav-item">
+                            <a class="nav-link" href="winkelwagen.php">Winkelmand</a>
+                        </li>
                     </ul>
                 </div>
             </nav>
@@ -74,72 +71,102 @@ function clean($string) {
 
 	    <h1> Winkelmand </h1>
     <?php
+    
+    // Als session leeg is, maak een nieuwe array
 if(empty($_SESSION['winkelwagen'])){
 	$_SESSION['winkelwagen'] = array();
 	}
     if(empty($_SESSION['aantal'])){
 	$_SESSION['aantal'] = array();
 	}
-	if(isset($_GET['artikelid']) && isset($_GET['number']) && $_GET['number'] >= 1){
-array_push($_SESSION['winkelwagen'], $_GET['artikelid']);
-array_push($_SESSION['aantal'], $_GET['number']);
-   } elseif(isset($_GET['number']) && $_GET['number'] < 1){
+	
+	
+	// Als artikel  aantal groter dan 1 is, pushen we het aantal en artikel in een session array
+	if(isset($_POST['artikelid']) && isset($_POST['number']) && $_POST['number'] >= 1){
+	array_push($_SESSION['winkelwagen'], $_POST['artikelid']);
+	array_push($_SESSION['aantal'], $_POST['number']);
+        asort($_SESSION['winkelwagen']);
+   } elseif(isset($_POST['number']) && $_POST['number'] < 1){
    echo 'Aantal moet groter dan 0 zijn';
    }
    
-   foreach($_SESSION['winkelwagen'] as $key => $value){
-	foreach($_SESSION['aantal'] as $key1 => $value1){
-	if($key == $key1){
-	$counter = $key;
-	}
-	}
-}
+   
    if(!empty($_SESSION['winkelwagen'])){
 $selectProducts = implode(',', $_SESSION['winkelwagen']);
     $row = $conn->query("SELECT * FROM stockitems SI JOIN suppliers S on SI.supplierID = S.supplierID WHERE SI.stockitemid IN (".$selectProducts.")");
-    $i = 0;
-    $totalePrijs = 0;
+    $i = 0;   //opteller key van Session array
+    $totalePrijs = 0; 
+    
+	$keys = array_keys($_SESSION['winkelwagen']); 
+        asort($_SESSION['winkelwagen']); //waardes sorteren in Session array "winkelwagen"
+
     while ($artikel = $row->fetch(PDO::FETCH_ASSOC)) {
         $artikelNaam = $artikel["StockItemName"];
         $artikelID = $artikel["StockItemID"];
         $artikelPrijs = $artikel["RecommendedRetailPrice"];
-	if(isset($_SESSION['aantal'][$i])){
-	$totalePrijs += $artikelPrijs *  $_SESSION['aantal'][$i];
+
+	foreach($_SESSION['winkelwagen'] as $key => $value){
+//Als de session Key van winkelwagen met de opteller '$i' gelijk is aan de session Key van winkelwagen
+if($keys[$i] == $key){
+	$totalePrijs += $artikelPrijs *  $_SESSION['aantal'][$key];  //totale prijs berekening
 	}
+	}
+
+
+	
+
 	        ?>
 
 
                 <div class="row">
                     <div class="col-lg-4">
-                        Product: <?php print($artikelNaam); ?> 
+                        Product: <?php
+	print $artikelNaam;
+			?> 
 		</div>
 		<div class="col-lg-2">
                         <div>Prijs: <?php print("€" . $artikelPrijs); ?> </div>
                     </div>
 		<div class="col-lg-3">
 		    <div> Aantal: <?php
-if(isset($_SESSION['aantal'][$i])){		    echo $_SESSION['aantal'][$i];} ?></div>
+foreach($_SESSION['winkelwagen'] as $key => $value){
+//Als de session Key van winkelwagen met de opteller '$i' gelijk is aan de session Key van winkelwagen
+if($keys[$i] == $key){
+echo ($_SESSION['aantal'][$key]);
+}
+}
+
+?></div>
                      </div>
 		<div class="col-lg-3">
 		<a href="verwijderArtikel.php?id=<?php echo $artikelID ?>&aantal=<?php echo $i; ?>">Verwijder</a>
 		</div>
 		</div>
 
-            <?php $i++;} 
+            <?php $i++;
+	    }   //sluiting while loop
+	    
+	    } 
 	    ?>
+	    <?php if(isset($totalePrijs)){ ?>
 	    <div class="row">
 		<div class="col-lg-6">
-			<div> Totale prijs: <?php echo "€".number_format($totalePrijs, 2); }?> </div>
+			<div> Totale prijs: <?php echo "€".number_format($totalePrijs, 2); ?> </div>
 		</div>
 		</div>
+		<?php } ?>
 	    </div>
+	    
+	    <form action="sessiondestroy.php" method="post">
+	    <input type="submit" value="verwijder items" name="items">
+	    </form>
+	    
             <!-- Optional JavaScript -->
             <!-- jQuery first, then Popper.js, then Bootstrap JS -->
             <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
             <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-            
-       <div class="container">
+           <div class="container">
            <div class="row">
       <div class="offset-lg-8">
       <button type="button" class="btn btn-verder btn-lg">  <a href="index.php">Verder Winkelen</a></button>
