@@ -17,8 +17,14 @@
     include 'session.php';
     require 'connection.php';
 
+<<<<<<< HEAD
     if (isset($_POST['register'])) {
         $errMsg = '';
+=======
+
+if (isset($_POST['register'])) {
+    $errMsg = '';
+>>>>>>> 1f2eba0c01e326209efd94e09be0fea0daf960fb
 //Hier wordt de ingevulde informatie opgehaald en gedefinieerd//
         $voornaam = $_POST['voornaam'];
         $achternaam = $_POST['achternaam'];
@@ -26,6 +32,7 @@
         $passwordhash = password_hash($_POST['wachtwoord'], PASSWORD_DEFAULT);
         $email = $_POST['email'];
 
+<<<<<<< HEAD
         if ($voornaam == '') {
             $errMsg = "Vul voornaam in";
         }
@@ -64,8 +71,43 @@
                 echo $e->getMessage();
             }
         } else { $errMsg = "Deze Emailadres is al geregistreerd"; }
-        }
+=======
+    //Hier wordt een ID gecreeeeerd//
+    $IDnumber = $conn->query('SELECT MAX(PersonID) AS ID FROM people');
+    $klantID = 0;
+    while ($number = $IDnumber->fetch()) {
+        $klantID += $number["ID"] + 1;
     }
+    if ($errMsg == '') {
+        $fullName = $voornaam . $achternaam;
+	$stmt = $conn->prepare('SELECT COUNT(EmailAddress) as Email FROM people WHERE EmailAddress = :email');
+	 $stmt->execute(array(
+            ':email' => $email
+        ));
+	
+	while($query = $stmt->fetch()){
+	$countEmail = $query["Email"];
+	}
+	if($countEmail < 1) {
+        try {
+            $stmt = $conn->prepare('INSERT INTO people (PersonID, FullName, EmailAddress, HashedPassword, LastEditedBy) VALUES (:ID, :naam, :email, :wachtwoord, 1)');
+            $stmt->execute(array(
+                //De ingevulde informatie wordt in de database gezet//
+                ':naam' => $fullName, ':wachtwoord' => $passwordhash, ':email' => $email, ':ID' => $klantID));
+         //   header('Location: Register.php?action=joined');
+            exit;
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+>>>>>>> 1f2eba0c01e326209efd94e09be0fea0daf960fb
+        }
+	} else{
+	echo "Deze emailadres is a geregistreerd";
+    }
+<<<<<<< HEAD
+=======
+}
+}
+>>>>>>> 1f2eba0c01e326209efd94e09be0fea0daf960fb
 //Als op de "register' knop wordt gedrukt dan wordt een button zichtbaar die je herleid naar de homepage//
     if (isset($_GET['action']) && $_GET['action'] == 'joined') {
         $errMsg = 'Registration succesful. Now you can <a href="LoginMain.php">Login</a>';
