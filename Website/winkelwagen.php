@@ -110,15 +110,19 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                         <div> Totale prijs: <?php echo "€" . number_format($totalePrijs, 2); ?> </div>
                     </div>
                 </div>
-            <?php } ?>
+            <?php } else { ?>
+	    	    <p> Er zitten geen producten in de winkelmand </p>
+		    <?php } ?>
+
         </div>
 
 
         <div class="row">
             <div class="offset-lg-8">
                 <button type="button" class="btn btn-verder btn-lg">  <a class="winkelwagenlinkjes" href="index.php">Verder Winkelen</a></button>
-
+	<?php if (isset($totalePrijs)) { ?>
                 <button type="button" class="btn btn-verder btn-lg">  <a class="winkelwagenlinkjes" href="afrekenen.php">Afrekenen</a></button>  
+		<?php } ?>
             </div>
         </div>
     </div>
