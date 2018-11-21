@@ -17,14 +17,11 @@
     include 'session.php';
     require 'connection.php';
 
-<<<<<<< HEAD
     if (isset($_POST['register'])) {
         $errMsg = '';
-=======
-
+    }
 if (isset($_POST['register'])) {
     $errMsg = '';
->>>>>>> 1f2eba0c01e326209efd94e09be0fea0daf960fb
 //Hier wordt de ingevulde informatie opgehaald en gedefinieerd//
         $voornaam = $_POST['voornaam'];
         $achternaam = $_POST['achternaam'];
@@ -32,7 +29,6 @@ if (isset($_POST['register'])) {
         $passwordhash = password_hash($_POST['wachtwoord'], PASSWORD_DEFAULT);
         $email = $_POST['email'];
 
-<<<<<<< HEAD
         if ($voornaam == '') {
             $errMsg = "Vul voornaam in";
         }
@@ -70,8 +66,8 @@ if (isset($_POST['register'])) {
             } catch (PDOException $e) {
                 echo $e->getMessage();
             }
-        } else { $errMsg = "Deze Emailadres is al geregistreerd"; }
-=======
+        } else { $errMsg = "Dit Emailadres is al geregistreerd"; }
+
     //Hier wordt een ID gecreeeeerd//
     $IDnumber = $conn->query('SELECT MAX(PersonID) AS ID FROM people');
     $klantID = 0;
@@ -98,16 +94,13 @@ if (isset($_POST['register'])) {
             exit;
         } catch (PDOException $e) {
             echo $e->getMessage();
->>>>>>> 1f2eba0c01e326209efd94e09be0fea0daf960fb
         }
 	} else{
 	echo "Deze emailadres is a geregistreerd";
     }
-<<<<<<< HEAD
-=======
 }
 }
->>>>>>> 1f2eba0c01e326209efd94e09be0fea0daf960fb
+}
 //Als op de "register' knop wordt gedrukt dan wordt een button zichtbaar die je herleid naar de homepage//
     if (isset($_GET['action']) && $_GET['action'] == 'joined') {
         $errMsg = 'Registration succesful. Now you can <a href="LoginMain.php">Login</a>';
@@ -152,5 +145,4 @@ if (isset($_POST['register'])) {
 </html>
 
 <!-- Hier wordt de informatie opgehaald-->
-
-                    
+            
