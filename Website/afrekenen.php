@@ -120,7 +120,7 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
 
                         </div>
                         <!-- Button trigger modal -->
-                        <input type="submit" class="btn btn-primary btn-success" data-target="#exampleModalCenter" name="afreken" value="Controleer uw gegevens">
+                        <input type="submit" class="btn btn-primary btn-success afrekenen" data-target="#exampleModalCenter" name="afreken" value="Controleer uw gegevens">
                     </form>
                     <!-- Modal -->
 
@@ -128,7 +128,7 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                     <form action="index.php" method="POST">
                         <div class="row">
                             <div class="col-50">
-                                <input type="submit" value="Betaling afbreken" class="btn btn-danger">
+                                <input type="submit" value="Betaling afbreken" class="btn btn-danger afbreken">
                                 </form>
                             </div>
                         </div>
