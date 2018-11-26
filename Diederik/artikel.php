@@ -102,7 +102,7 @@ $sizeProblem = FALSE;
                         </script>
                     </div>
                     <div class="col-lg-6">
-                        Product: <?php
+                        <strong>Product: </strong><?php
                         //Als het bekende maatprobleem zich afspeelt, en daarbij de maat nog niet geselecteerd is, dan wordt het artikel weergegeven zonder maat. (Er is dus nog geen maat gekozen.)
                         if ($maatSelected == 'FALSE' AND $sizeProblem) {
                             print($artikelDing); //Artikelnaam wordt weergegeven zonder maat er achter. (dus niet zoals dat standaart in de database staat.)
@@ -112,10 +112,10 @@ $sizeProblem = FALSE;
 
                         //Hier wordt gekeken of het een artikel is met een maatprobleem, en of de maat in dat geval ook al geselecteerd is
                         if ($maatSelected == 'TRUE' OR ! $sizeProblem) {
-                            ?><div class = "prijs">Prijs: <?php
+                            ?><div class = "prijs"><strong>Prijs: </strong><?php
                             print("€" . $artikelPrijs);
                         } else {
-                            ?><div class = "prijs">Prijs:<?php
+                            ?><div class = "prijs"><strong>Prijs:</strong><?php
                             }
                             ?> </div>
                             <!--Hier wordt gekeken of het maatprobleem aan de orde is-->
@@ -152,47 +152,56 @@ $sizeProblem = FALSE;
                                     </div>
                                 </div>
                             <?php } ?>
-                            <div class="description">Extra informatie: <?php print($slogan); ?> </div>
+                            <div class="description"><strong>Extra informatie:</strong> 
+                                <?php
+                                if ($slogan) {
+                                    print("<i>".$slogan."</i>");
+                                } else {
+                                    print("<i>Dit artikel bevat geen extra, relevante, informatie.</i>");
+                                }
+                                ?> </div>
                         </div>
-                    </div>
-
+                    </div><strong>
                     <?php
-                } print($derdePartij);
+                } print("&#9400 ".$derdePartij);
+                ?> </strong><div class="row"> <?php
                 //Hier wordt gekeken of het maatprobleem aan de orde is en of in dat geval de maat al geselecteerd is
                 if ($maatSelected == 'TRUE' OR ! $sizeProblem) {
                     if (empty($_SESSION['winkelwagen'])) {
                         $_SESSION['winkelwagen'] = array();
                         ?>
-                        <form action="winkelwagen.php" method="post">
-                            <input type="hidden" value="<?php echo $artikelID; ?>" name="artikelid">
-                            <input type="number" name="number" onkeypress="return event.charCode >= 48" min="1"> <!-- Hier moet nog een maximum komen (Maximum moet variable van de voorraad zijn -->
-                            <input type="submit" value="Aan winkelmand toevoegen">
-                        </form>
-
-                        <?php
-                    }
-
-                    foreach ($_SESSION['winkelwagen'] as $key => $value) {
-                        if ($artikelID == $value) {
-                            echo ' <br> U heeft dit artikel al in uw winkelwagen staan';
-                            $exists = "";
+                            <div class="row">
+                                <form class="winkelmandToevoeg" action="winkelwagen.php" method="post">
+                                    <input class="form-control winkelmandToevoegenAantal" type="hidden" value="<?php echo $artikelID; ?>" name="artikelid">
+                                    <input class="winkelmandToevoegenAantal" type="number" name="number" onkeypress="return event.charCode >= 48" min="1">
+                                    <!-- Hier moet nog een maximum komen (Maximum moet variable van de voorraad zijn -->
+                                    <input class="btn winkelmandToevoegen" type="submit" value="Aan winkelmand toevoegen">
+                                </form>
+                            </div>
+                            <?php
                         }
-                    }
-                    if (!isset($exists) && !empty($_SESSION['winkelwagen'])) {
-                        ?>
 
-                        <form action="winkelwagen.php" method="post">
-                            <input type="hidden" value="<?php echo $artikelID; ?>" name="artikelid">
-                            <input type="number" name="number" onkeypress="return event.charCode >= 48" min="1"> <!-- Hier moet nog een maximum komen (Maximum moet variable van de voorraad zijn -->
-                            <input type="submit" value="Aan winkelmand toevoegen">
-                        </form>
-                        <?php
-                    }
-                } else {
-                    print("<BR><BR>Selecteer eerst een maat");
-                }
-                ?>
+                        foreach ($_SESSION['winkelwagen'] as $key => $value) {
+                            if ($artikelID == $value) {
+                                echo ' <br> <i>U heeft dit artikel al in uw winkelwagen staan</i>';
+                                $exists = "";
+                            }
+                        }
+                        if (!isset($exists) && !empty($_SESSION['winkelwagen'])) {
+                            ?>
 
+                            <form class="winkelmandToevoeg" action="winkelwagen.php" method="post">
+                                <input class="form-control winkelmandToevoegenAantal" type="hidden" value="<?php echo $artikelID; ?>" name="artikelid">
+                                <input class="form-control winkelmandToevoegenAantal" type="number" name="number" onkeypress="return event.charCode >= 48" min="1"> <!-- Hier moet nog een maximum komen (Maximum moet variable van de voorraad zijn -->
+                                <input class="btn winkelmandToevoegen" type="submit" value="Aan winkelmand toevoegen">
+                            </form>
+                            <?php
+                        }
+                    } else {
+                        print("<BR><BR>Selecteer eerst een maat");
+                    }
+                    ?>
+                </div>
                 <!-- Optional JavaScript -->
                 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
                 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

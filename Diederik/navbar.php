@@ -28,9 +28,9 @@
                         </div>
                     </li>
                     <!-- Hier is de knop naar de Contact-pagina -->
-                    <li class="nav-item">
+                    <!--<li class="nav-item">
                         <a class="nav-link" href="#">Contact</a>
-                    </li>
+                    </li>-->
                     <!-- Hier zit de zoekfunctie -->
                     <form class="form-inline" action="zoek.php">
                         <input class="form-control mr-sm-2" type="search" placeholder="<?php if(isset($_GET["zoek"])) { print($_GET["zoek"]); } else { print("Zoek artikel..."); }?>" aria-label="Search" name="zoek">
@@ -41,6 +41,21 @@
                     <li class="nav-item">
                         <a class="nav-link" href="winkelwagen.php">Winkelmand</a>
                     </li>
+		    		<?php if(!isset($_SESSION['email'])){?>
+
+		<li class="nav-item">
+                        <a class="nav-link" href="LoginMain.php">Inloggen</a>
+                    </li>
+
+		    <li class="nav-item">
+                        <a class="nav-link" href="Register.php">Registreren</a>
+                    </li>
+		    <?php } ?>
+		    <?php if(isset($_SESSION['email'])){?>
+		    <li class="nav-item">
+		    <a class="nav-link" href="logout.php">Uitloggen</a>
+		    </li>
+		    <?php } ?>
                 </ul>
             </div>
         </nav>

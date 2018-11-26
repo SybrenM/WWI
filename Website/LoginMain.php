@@ -21,25 +21,20 @@
     if (isset($_POST['login'])) {
         $errMsg = '';
         // Deze isset functie controleerd telkens of je verplichte velden hebt leeggelaten//
-        $voornaam = $_POST['voornaam'];
-        $achternaam = $_POST['achternaam'];
+        $email = $_POST['email'];
         $wachtwoord = $_POST['wachtwoord'];
-        if ($voornaam == '') {
-            $errMsg = 'Vul voornaam in';
-        }
-        if ($achternaam == '') {
-            $errMsg = 'Vul achternaam in';
+        if ($email == '') {
+            $errMsg = 'Vul emailadres in';
         }
         if ($wachtwoord == '') {
             $errMsg = 'Vul wachtwoord in';
         }
         //De voornaam en achternaam wordt gebonden omdat dit zo is genoteerd in de database
-        $fullName = $voornaam . $achternaam;
         try {
-            $stmt = $conn->prepare('SELECT * FROM people WHERE FullName = :naam');
+            $stmt = $conn->prepare('SELECT * FROM people WHERE EmailAddress = :email');
             $stmt->execute(array(
                 //Hier worden de eerder ingevulden variabelen ge-assigend aan de rijen in de database// 
-                ':naam' => $fullName
+                ':email' => $email
             ));
             $data = $stmt->fetch();
             //Hier wordt gekeken of het gehashte wachtwoord in de database overeenkomt met het ingevulde wachtwoord.//
@@ -77,8 +72,7 @@
             }
             ?>
             <form action="" method="post">
-                <input type="text" name="voornaam" placeholder="Voornaam" autocomplete="off" class="box"/><br /><br />
-                <input type="text" name="achternaam"placeholder="Achternaam" autocomplete="off" class="box"/><br /><br />
+                <input type="text" name="email" placeholder="E-mailadres" autocomplete="off" class="box"/><br /><br />
                 <input type="password" name="wachtwoord" placeholder="Wachtwoord" autocomplete="off" class="box" /><br/><br />
                 <input type="submit" class="btn btn-primary" name='login' value="Login" class='submit'/><br />
             </form>

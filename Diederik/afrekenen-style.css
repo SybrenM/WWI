@@ -1,7 +1,6 @@
 body {
   font-family: Arial;
-  font-size: 17px;
-  padding: 8px;
+  overflow-x: hidden;
 }
 
 .check{
@@ -72,7 +71,7 @@ label {
   font-size: 24px;
 }
 
-.btn {
+.afrekenen, .afbreken {
   background-color: #4CAF50;
   color: white;
   padding: 12px;

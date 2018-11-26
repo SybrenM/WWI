@@ -254,7 +254,7 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
 
                             <input type="hidden" name="land" value="<?php echo $_POST["land"]; ?>">    
                             <div><strong>Land:</strong> <?php echo $_POST["land"]; ?> </div>
-                            <div><I>Door op de knop "Naar IDEAL betaalpagina" te klikken ga je akkoort met de bestelling en de ingevoerde gegevens.</I></div>
+                            <div><I>Door op de knop "Naar IDEAL betaalpagina" te klikken ga je akkoord met de bestelling en de ingevoerde gegevens.</I></div>
                             <input type="submit" class="btn btn-primary btn-success" data-target="#exampleModalCenter" name="betalen" value="Naar IDEAL betaalpagina">
                             </form>
                         </div>     
