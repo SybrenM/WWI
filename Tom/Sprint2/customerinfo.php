@@ -134,13 +134,10 @@ if (password_verify('', $hash) == TRUE) {
 <?php
 if (isset($_SESSION['email'])) {
     try {
-        $stmt = $conn->prepare('SELECT 
-    C.password,
-    C.voornaam,
-    C.achternaam,
-    C.email,
-    A.customerid,
-    A.accountopeneddate,
+        $stmt = $conn->prepare('INSERT INTO people
+    PersonID,
+    
+    
     A.phonenumber,
     A.faxnumber,
     A.DeliveryAddressLine1,

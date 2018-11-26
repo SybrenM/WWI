@@ -70,21 +70,12 @@ if (isset($_POST['login'])) {
                 <div style="background-color:#006D9C; color:#FFFFFF; padding:10px;"><b>Login</b></div>
                 <div style="margin: 15px">
                     <form action="" method="post">
-                        <input type="text" name="voornaam" value="<?php
-                        if (isset($_POST['voornaam'])) {
-                            echo $_POST['voornaam'];
-                        }
-                        ?>" placeholder="Achternaam" autocomplete="off" class="box"/><br /><br />
-                        <input type="text" name="achternaam" value="<?php
-                               if (isset($_POST['achternaam'])) {
-                                   echo $_POST['achternaam'];
-                               }
-                        ?>" placeholder="Wachtwoord" autocomplete="off" class="box"/><br /><br />
-                        <input type="password" name="wachtwoord" value="<?php
-                        if (isset($_POST['wachtwoord'])) {
-                            echo $_POST['wachtwoord'];
-                        }
-                        ?>" placeholder=Wachtwoord autocomplete="off" class="box" /><br/><br />
+                       
+                        <input placeholder="email" autocomplete="off" class="box"/><br /><br />
+                        <input type="text" name="email"
+                               placeholder="Wachtwoord" autocomplete="off" class="box"/><br /><br />
+                        <input type="password" name="wachtwoord" 
+                               placeholder=Wachtwoord autocomplete="off" class="box" /><br/><br />
                         <input type="submit" name='login' value="Login" class='submit'/><br />
                     </form>
                 </div>

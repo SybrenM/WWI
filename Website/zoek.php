@@ -83,7 +83,7 @@ $zoek = filter_input(INPUT_GET, "zoek", FILTER_SANITIZE_STRING);
                         a:
                     }
                 }
-                if ($count == 0) 0 { //Als er geen 1 artikel is gevonden
+                if ($count == 0) { //Als er geen 1 artikel is gevonden
                     echo 'Geen zoekresultaten gevonden voor: \'' . $zoek . "'";
                 }
             } catch (PDOException $e) {
