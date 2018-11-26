@@ -31,8 +31,8 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
         <div class="row">
             <div class="col-75">
                 <div class="container">
-                    <form action="" method="post">
-                        <h2>Afrekenen</h2>
+                    <form action="" method="post"> 
+                        <h2>Afrekenen</h2>                       <!-- tabel met placeholders en code zodat de ingevulde gegevens blijven staan nadat je op een knop hebt gedrukt. -->
                         <p>Vul de gegevens in en klik op "Door naar afrekenen" om de betaling af te ronden.</p>
                         <p>Klik op "Bestelling afbreken" om de bestelling af te breken.</p>
                         <div class="row">
@@ -92,7 +92,7 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                                 <h3>Betaalmethode</h3>
                                 <label for="fname">Geaccepteerde betaalkaarten</label>
                                 <div class="icon-container">
-                                    <img src="ideal3.jpg" alt="ideal">
+                                    <img src="ideal3.jpg" alt="ideal"> <!-- ideal logo -->
                                 </div>
                                 <label for="cname">Naam kaarthouder</label>
                                 <input type="text" id="cname" name="cardname" placeholder="Henk de Groot" value="<?php
@@ -120,7 +120,7 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
 
                         </div>
                         <!-- Button trigger modal -->
-                        <input type="submit" class="btn btn-primary btn-success afrekenen" data-target="#exampleModalCenter" name="afreken" value="Controleer uw gegevens">
+                        <input type="submit" class="btn btn-primary btn-success afrekenen" data-target="#exampleModalCenter" name="afreken" value="Controleer uw gegevens"> <!--  afrekenen knop -->
                     </form>
                     <!-- Modal -->
 
@@ -128,7 +128,7 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                     <form action="index.php" method="POST">
                         <div class="row">
                             <div class="col-50">
-                                <input type="submit" value="Betaling afbreken" class="btn btn-danger afbreken">
+                                <input type="submit" value="Betaling afbreken" class="btn btn-danger afbreken"> <!-- betaling afbreken knop -->
                                 </form>
                             </div>
                         </div>
@@ -136,7 +136,7 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
             </div>
 
             <div class="col-25">
-                <div class="container">
+                <div class="container"> <!-- code winkelmand -->
 
                     <h1> Winkelmand </h1>
                     <?php
@@ -223,7 +223,7 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                 if (isset($_POST['afreken'])) {
                     ?>
 
-                    <form action="succes.php" method="POST">
+                    <form action="succes.php" method="POST"> <!-- code voor onzichtbare POST method zodat de ingevulde gegevens in succes.php weer opgevraagt kunnen worden. -->
                         <div class="container check">
                             <input type="hidden" name="Naam" value="<?php echo $_POST["Naam"]; ?>">
                             <div><strong>Naam:</strong> <?php echo $_POST["Naam"]; ?> </div> 
@@ -255,9 +255,10 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                             <input type="hidden" name="land" value="<?php echo $_POST["land"]; ?>">    
                             <div><strong>Land:</strong> <?php echo $_POST["land"]; ?> </div>
                             <div><I>Door op de knop "Naar IDEAL betaalpagina" te klikken ga je akkoort met de bestelling en de ingevoerde gegevens.</I></div>
-                            <input type="submit" class="btn btn-primary btn-success" data-target="#exampleModalCenter" name="betalen" value="Naar IDEAL betaalpagina">
+                            <input type="submit" class="btn btn-primary btn-success" data-target="#exampleModalCenter" name="betalen" value="Naar IDEAL betaalpagina"> <!-- knop naar succes.php -->
                             </form>
-                        </div>     
+                        </div>   
+ 
                 </div>
                 <?php
             }
@@ -265,9 +266,28 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
 
         </div>
 
+<?php
+// This function will run within each post array including multi-dimensional arrays 
+function ExtendedAddslash(&$params)
+{ 
+        foreach ($params as &$var) {
+            // check if $var is an array. If yes, it will start another ExtendedAddslash() function to loop to each key inside.
+            is_array($var) ? ExtendedAddslash($var) : $var=addslashes($var);
+            unset($var);
+        }
+} 
 
+// Initialize ExtendedAddslash() function for every $_POST variable
+ExtendedAddslash($_POST);      
 
-
+$naam= $_POST['Naam']; 
+$address = $_POST['address'];
+$zip = $_POST['zip'];
+$stad = $_POST['stad'];
+$land = $_POST['land'];
+mysql_query("INSERT INTO `factuur` (klantnaam, adres, postcode, stad, land) 
+                               VALUES ('$naam', '$address', '$zip', '$stad', '$land') ") 
+?>
 
 
 

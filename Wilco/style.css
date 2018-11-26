@@ -1,3 +1,14 @@
+nav {
+width: 100% !important;
+}
+
+            .placeholder{
+                max-width: 100%;
+            }
+            .description, .prijs{
+                margin-top: 100px;
+            }
+
 .navbar-brand{
     color: #FFF !important;
 }
@@ -7,14 +18,14 @@
 }
 
 .container{
-    margin-top: 20px;
+    margin-top: 20px !important;
 }
 
 /* Clearfix (clear floats) */
 .row::after {
-    content: "";
-    clear: both;
-    display: table;
+    content: "" !important;
+    clear: both !important;
+    display: table !important;
 }
 
 .smallPicture {
@@ -29,9 +40,9 @@
 
 
 .navbar{
-    background-color: #1a75ff;
-    margin-right: 10px;
-    padding-left: 10px;
+    background-color: #1a75ff !important;
+    margin-right: 10px !important;
+    padding-left: 10px !important;
 }
 
 .current{
@@ -42,3 +53,14 @@
     background-color: #135fd3 !important;
 }
 
+.artikelTekst {
+	color: rgba(0,0,0,1) !important;
+
+}
+.btn-lg {
+	background-color: #135fd3 !important;
+}
+
+.winkelwagenlinkjes {
+	color: #FFF !important;
+}

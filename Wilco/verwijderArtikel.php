@@ -1,8 +1,9 @@
 <?php
+session_start();
 $id = filter_input(INPUT_GET, "id", FILTER_SANITIZE_STRING);
 $aantal = filter_input(INPUT_GET, "aantal", FILTER_SANITIZE_STRING);
 
-session_start();
+
 include 'connection.php';
 $row = $conn->query("SELECT * FROM stockitems WHERE StockItemID = ".$id);
     while ($artikel = $row->fetch()) {
