@@ -74,7 +74,7 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                         }
                     }
                     ?>
-                    0
+                    
 
                     <div class="row">
                         <div class="col-lg-4">

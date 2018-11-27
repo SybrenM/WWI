@@ -22,16 +22,7 @@ $sizeProblem = FALSE;
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="artikel-style.css">
         <link rel="stylesheet" type="text/css" href="style.css">
-        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
-        <style>
-            .placeholder{
-                max-width: 100%;
-            }
-            .description, .prijs{
-                margin-top: 100px;
-            }
-        </style>
         <title>Hello, world!</title> 
     </head>
     <?php
@@ -56,13 +47,13 @@ $sizeProblem = FALSE;
         //Hier wordt gekeken of er tussen het artikel iets zit met een lengte
         if ($LengteEen OR $LengteTwee OR $LengteDrie) {
             $artikelDing = str_replace($artikelMaat, '', $artikelNaam); //Artikelding is de naam van het artikel zonder eventuele maat er achter
-            $sizeProblem = TRUE; //Omdat dit dus een geval ik met een lastige lengte-weergave, wordt dit true
+            $sizeProblem = TRUE; //Omdat dit dus een geval is met een lastige lengte-weergave, wordt dit true
         }
         //Hier wordt gekeken of het artikel iets heeft met een maatje S, M of L.
         if ($Small OR $Medium OR $Large) {
             $artikelDing = str_replace(") " . $artikelMaat, '', $artikelNaam); //Artikelding is de naam van het artikel zonder eventuele lengte er achter (Het haaakje er voor is om te kijken of de maat aan het einde wordt weergegeven, zodat niet ergens anders in het woord dingen worden aangepast
             $artikelDing = $artikelDing . ")"; //Hier wordt het haakje weer teruggezet, omdat deze alleen werd weggehaald om de positie te ontdekken
-            $sizeProblem = TRUE; //Omdat dit dus een geval ik met een lastige maat-weergave, wordt dit true
+            $sizeProblem = TRUE; //Omdat dit dus een geval is met een lastige maat-weergave, wordt dit true
         }
         ?>
         <body>
@@ -73,16 +64,14 @@ $sizeProblem = FALSE;
                 <div class="row">
                     <div class="col-lg-6" >
                         <div class="w3-content w3-section">
-                            <?php $fotoID = rand(1, 17); ?>
-                            <img src="artikelFoto/<?php print($fotoID); ?>.jpg"  class="mySlides w3-animate-fading" width="500px" height="500px">
-                            <?php $fotoID = rand(1, 17); ?>
-                            <img src="artikelFoto/<?php print($fotoID); ?>.jpg"  class="mySlides w3-animate-fading" width="500px" height="500px">
-                            <?php $fotoID = rand(1, 17); ?>
-                            <img src="artikelFoto/<?php print($fotoID); ?>.jpg"  class="mySlides w3-animate-fading" width="500px" height="500px">
+                            <img src="artikelFoto/foto/<?php print($artikelID); ?>.jpg"  class="mySlides w3-animate-fading" width="500px" height="500px">
+                            <img src="artikelFoto/foto/<?php print($artikelID+1); ?>.jpg"  class="mySlides w3-animate-fading" width="500px" height="500px">
+                            <img src="artikelFoto/foto/<?php print($artikelID-1); ?>.jpg"  class="mySlides w3-animate-fading" width="500px" height="500px">
 
                         </div>
 
                         <script>
+                            //Hier zit de code voor de slideshow
                             var myIndex = 0;
                             carousel();
 
@@ -97,7 +86,7 @@ $sizeProblem = FALSE;
                                     myIndex = 1
                                 }
                                 x[myIndex - 1].style.display = "block";
-                                setTimeout(carousel, 8000);
+                                setTimeout(carousel, 8000); //Duur van foto's in ms
                             }
                         </script>
                     </div>
@@ -155,21 +144,21 @@ $sizeProblem = FALSE;
                             <div class="description"><strong>Extra informatie:</strong> 
                                 <?php
                                 if ($slogan) {
-                                    print("<i>".$slogan."</i>");
+                                    print("<i>" . $slogan . "</i>");
                                 } else {
                                     print("<i>Dit artikel bevat geen extra, relevante, informatie.</i>");
                                 }
                                 ?> </div>
                         </div>
                     </div><strong>
-                    <?php
-                } print("&#9400 ".$derdePartij);
-                ?> </strong><div class="row"> <?php
-                //Hier wordt gekeken of het maatprobleem aan de orde is en of in dat geval de maat al geselecteerd is
-                if ($maatSelected == 'TRUE' OR ! $sizeProblem) {
-                    if (empty($_SESSION['winkelwagen'])) {
-                        $_SESSION['winkelwagen'] = array();
-                        ?>
+                        <?php
+                    } print("&#9400 " . $derdePartij);
+                    ?> </strong><div class="row"> <?php
+                    //Hier wordt gekeken of het maatprobleem aan de orde is en of in dat geval de maat al geselecteerd is
+                    if ($maatSelected == 'TRUE' OR ! $sizeProblem) {
+                        if (empty($_SESSION['winkelwagen'])) {
+                            $_SESSION['winkelwagen'] = array();
+                            ?>
                             <div class="row">
                                 <form class="winkelmandToevoeg" action="winkelwagen.php" method="post">
                                     <input class="form-control winkelmandToevoegenAantal" type="hidden" value="<?php echo $artikelID; ?>" name="artikelid">
@@ -191,7 +180,7 @@ $sizeProblem = FALSE;
                             ?>
 
                             <form class="winkelmandToevoeg" action="winkelwagen.php" method="post">
-                                <input class="form-control winkelmandToevoegenAantal" type="hidden" value="<?php echo $artikelID; ?>" name="artikelid">
+                                <input class="form-control winkelmandToevoegenAantal" type="hidden" value="<?php echo $artikelID; ?>" name="artikelid"> <!-- Dit is het verborgen stukje dat het artikelID meegeeft -->
                                 <input class="form-control winkelmandToevoegenAantal" type="number" name="number" onkeypress="return event.charCode >= 48" min="1"> <!-- Hier moet nog een maximum komen (Maximum moet variable van de voorraad zijn -->
                                 <input class="btn winkelmandToevoegen" type="submit" value="Aan winkelmand toevoegen">
                             </form>
