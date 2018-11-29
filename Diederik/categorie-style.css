@@ -51,3 +51,8 @@ body {
     }
     
 }
+
+.rij {
+	width: 100% !important;
+	text-align: center !important;
+}

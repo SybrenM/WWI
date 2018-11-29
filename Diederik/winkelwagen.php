@@ -48,7 +48,8 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                 array_push($_SESSION['aantal'], $_POST['number']);
                 asort($_SESSION['winkelwagen']);
             } elseif (isset($_POST['number']) && $_POST['number'] < 1) {
-                echo 'Aantal moet groter dan 0 zijn';
+                echo 'U moet eerst een aantal invullen';
+                goto a;
             }
 
 
@@ -73,7 +74,7 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                         }
                     }
                     ?>
-
+                    
 
                     <div class="row">
                         <div class="col-lg-4">
@@ -110,18 +111,23 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                         <div> Totale prijs: <?php echo "€" . number_format($totalePrijs, 2); ?> </div>
                     </div>
                 </div>
+            <?php } else { ?>
+                <p> Er zitten geen producten in de winkelmand </p>
             <?php } ?>
+
         </div>
 
 
         <div class="row">
             <div class="offset-lg-8">
                 <button type="button" class="btn btn-verder btn-lg">  <a class="winkelwagenlinkjes" href="index.php">Verder Winkelen</a></button>
-
-                <button type="button" class="btn btn-verder btn-lg">  <a class="winkelwagenlinkjes" href="afrekenen.php">Afrekenen</a></button>  
+                <?php if (isset($totalePrijs)) { ?>
+                    <button type="button" class="btn btn-verder btn-lg">  <a class="winkelwagenlinkjes" href="afrekenen.php">Afrekenen</a></button>  
+                <?php } ?>
             </div>
         </div>
     </div>
+    <?php a: ?>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
