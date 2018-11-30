@@ -32,8 +32,9 @@ $sizeProblem = FALSE;
                 margin-top: 100px;
             }
         </style>
-        <title>Hello, world!</title> 
+        <title>Wide World Importers</title> 
     </head>
+
     <?php
 //Hier wordt één specifiek artikel opgezocht met het artikelID die meekomt uit de link
     $query = $conn->query("SELECT * FROM stockitems SI JOIN suppliers S on SI.supplierID = S.supplierID WHERE SI.stockitemid = " . $artikelID);
@@ -65,6 +66,12 @@ $sizeProblem = FALSE;
             $sizeProblem = TRUE; //Omdat dit dus een geval ik met een lastige maat-weergave, wordt dit true
         }
         ?>
+<?php
+$stmt = $conn->query("SELECT QuantityOnHand FROM stockitemholdings WHERE StockItemID = " . $artikelID);
+while($maxArtikel = $stmt->fetch()){
+$maxCount = $maxArtikel["QuantityOnHand"];
+}
+?>
         <body>
             <!-- Hier wordt de navbar opgevraagd -->
             <?php include 'navbar.php'; ?>
@@ -152,7 +159,25 @@ $sizeProblem = FALSE;
                                     </div>
                                 </div>
                             <?php } ?>
-                            <div class="description">Extra informatie: <?php print($slogan); ?> </div>
+                            <div class="description">Extra informatie: <?php print($slogan) . "."; ?>  
+</br> <?php 
+
+
+
+if ($maxCount > 10000) {
+    $maxCount = $maxCount / 5;
+    echo "Het maximum aantal dat u van " . $artikelNaam . " kan bestellen is ". round($maxCount) . ".";
+} elseif ($maxCount > 1000 && $maxCount < 10000) {
+    $maxCount = $maxCount / 7;
+    echo "Het maximum aantal dat u van " . $artikelNaam . " kan bestellen is ". round($maxCount) . ".";
+} elseif ($maxCount < 100) {
+    $maxCount = $maxCount;
+    echo "Het maximum aantal dat u van " . $artikelNaam . " kan bestellen is ". round($maxCount) . ".";
+} else {
+    $maxCount = $maxCount / 7;
+   echo "Het maximum aantal dat u van " . $artikelNaam . " kan bestellen is ". round($maxCount) . ".";
+}
+?></div>
                         </div>
                     </div>
 
@@ -165,7 +190,7 @@ $sizeProblem = FALSE;
                         ?>
                         <form action="winkelwagen.php" method="post">
                             <input type="hidden" value="<?php echo $artikelID; ?>" name="artikelid">
-                            <input type="number" name="number" onkeypress="return event.charCode >= 48" min="1"> <!-- Hier moet nog een maximum komen (Maximum moet variable van de voorraad zijn -->
+                            <input type="number" name="number" onkeypress="return event.charCode >= 48" min="1" max="<?php echo round($maxCount)?>"> <!-- Hier moet nog een maximum komen (Maximum moet variable van de voorraad zijn -->
                             <input type="submit" value="Aan winkelmand toevoegen">
                         </form>
 
@@ -183,7 +208,7 @@ $sizeProblem = FALSE;
 
                         <form action="winkelwagen.php" method="post">
                             <input type="hidden" value="<?php echo $artikelID; ?>" name="artikelid">
-                            <input type="number" name="number" onkeypress="return event.charCode >= 48" min="1"> <!-- Hier moet nog een maximum komen (Maximum moet variable van de voorraad zijn -->
+                            <input type="number" name="number" onkeypress="return event.charCode >= 48" min="1" max="<?php echo round($maxCount)?>"> <!-- Hier moet nog een maximum komen (Maximum moet variable van de voorraad zijn -->
                             <input type="submit" value="Aan winkelmand toevoegen">
                         </form>
                         <?php

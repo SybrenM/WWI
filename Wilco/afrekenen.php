@@ -1,13 +1,13 @@
 <?php
 session_start();
-include 'connection.php';
+    require 'connection.php';
 $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
-//if(isset($_POST["Naam"]) && isset($_POST['email']) && isset($_POST['address']) && isset($_POST['city']) && isset($_POST['zip']) && isset($_POST['land']) && isset($_POST['telefoonnummer'])){
+//if(isset($_POST["Naam"]) && isset($_POST['email']) && isset($_POST['straat']) && isset($_POST['plaats']) && isset($_POST['postcode']) && isset($_POST['land']) && isset($_POST['telefoonnummer'])){
 //$_SESSION['Naam'] = $_POST['Naam'];
 //$_SESSION['email'] = $_POST['email'];
-//$_SESSION['address'] = $_POST['address'];
-//$_SESSION['city'] = $_POST['city'];
-//$_SESSION['zip'] = $_POST['zip'];
+//$_SESSION['straat'] = $_POST['straat'];
+//$_SESSION['plaats'] = $_POST['plaats'];
+//$_SESSION['postcode'] = $_POST['postcode'];
 //$_SESSION['land'] = $_POST['land'];
 //$_SESSION['telefoonnummer'] = $_POST['telefoonnummer'];
 //}
@@ -25,7 +25,19 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
     </head>
     <body>
      <?php
-
+ if (isset($_POST["afrekenen"])) {
+        $voornaam = $_POST['voornaam'];
+        $achternaam = $_POST['achternaam'];
+        $email = $_POST['email'];
+        $straat = $_POST['straat'];
+        $huisnummer = $_POST['huisnummer'];
+        $plaats = $_POST['plaats'];
+        $postcode = $_POST['postcode'];
+        $telefoonnummer = $_POST['telefoonnummer'];
+        $fullName = $voornaam . " " . $achternaam . " " . $klantID;
+        $straatennummer = $straat . " " . $huisnummer;
+        $errMsg = '';
+ }
     ?>
 
         <?php
@@ -41,10 +53,16 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                         <div class="row">
                             <div class="col-50">
                                 <h3>Betaal adres</h3>
-                                <label for="fname"><i class="fa fa-user"></i> Naam</label>
-                                <input type="text" id="fname" name="Naam" placeholder="Henk de Groot" value="<?php
-                                if (isset($_POST["Naam"])) {
-                                    echo ($_POST["Naam"]);
+                                <label for="fname"><i class="fa fa-user"></i> Voornaam</label>
+                                <input type="text" id="fname" name="voornaam" placeholder="Henk " value="<?php
+                                if (isset($_POST["voornaam"])) {
+                                    echo ($_POST["voornaam"]);
+                                }
+                                ?>" required>
+                                <label for="aname"><i class="fa fa-user"></i> Achternaam</label>
+                                <input type="text" id="fname" name="achternaam" placeholder="de Groot" value="<?php
+                                if (isset($_POST["achternaam"])) {
+                                    echo ($_POST["achternaam"]);
                                 }
                                 ?>" required>
                                 <label for="email"><i class="fa fa-envelope"></i> Email</label>
@@ -53,31 +71,30 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                                     echo ($_POST["email"]);
                                 }
                                 ?>" required>
-                                <label for="adr"><i class="fa fa-address-card-o"></i> Adres</label>
-                                <input type="text" id="adr" name="address" placeholder="Dorpstraat 14" value="<?php
-                                if (isset($_POST["address"])) {
-                                    echo ($_POST["address"]);
+                                <label for="adr"><i class="fa fa-straat-card-o"></i> Adres</label>
+                                <input type="text" id="adr" name="straat" placeholder="Dorpstraat" value="<?php
+                                if (isset($_POST["straat"])) {
+                                    echo ($_POST["straat"]);
                                 }
                                 ?>" required>
-                                <label for="city"><i class="fa fa-institution"></i> Plaats</label>
-                                <input type="text" id="city" name="city" placeholder="Zwolle" value="<?php
-                                if (isset($_POST["city"])) {
-                                    echo ($_POST["city"]);
+                                                              <label for="land"><i class="fa"></i> Huisnummer</label>
+                                <input type="text" id="huisnummer" name="huisnummer" placeholder="12" value="<?php
+                                if (isset($_POST["huisnummer"])) {
+                                    echo ($_POST["huisnummer"]);
                                 }
                                 ?>" required>
-                                <label for="land"><i class="fa"></i> Land</label>
-                                <input type="text" id="land" name="land" placeholder="Nederland" value="<?php
-                                if (isset($_POST["land"])) {
-                                    echo ($_POST["land"]);
+                                <label for="plaats"><i class="fa"></i> Plaats</label>
+                                <input type="text" id="plaats" name="plaats" placeholder="Zwolle" value="<?php
+                                if (isset($_POST["plaats"])) {
+                                    echo ($_POST["plaats"]);
                                 }
                                 ?>" required>
-
                                 <div class="row">
                                     <div class="col-50">
-                                        <label for="zip">Postcode</label>   
-                                        <input type="text" id="zip" name="zip" placeholder="9999XY" value="<?php
-                                        if (isset($_POST["zip"])) {
-                                            echo ($_POST["zip"]);
+                                        <label for="postcode">Postcode</label>   
+                                        <input type="text" id="postcode" name="postcode" placeholder="9999XY" value="<?php
+                                        if (isset($_POST["postcode"])) {
+                                            echo ($_POST["postcode"]);
                                         }
                                         ?>" required>
                                         <label for="telefoonnummer"><i class="fa"></i> Telefoonnummer</label>
@@ -228,20 +245,26 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
 
                     <form action="succes.php" method="POST"> <!-- code voor onzichtbare POST method zodat de ingevulde gegevens in succes.php weer opgevraagt kunnen worden. -->
                         <div class="container check">
-                            <input type="hidden" name="Naam" value="<?php echo $_POST["Naam"]; ?>">
-                            <div><strong>Naam:</strong> <?php echo $_POST["Naam"]; ?> </div> 
+                            <input type="hidden" name="voornaam" value="<?php echo $_POST["voornaam"]; ?>">
+                            <div><strong>Voornaam:</strong> <?php echo $_POST["voornaam"]; ?> </div> 
 
+                             <input type="hidden" name="achternaam" value="<?php echo $_POST["achternaam"]; ?>">
+                            <div><strong>Achternaam:</strong> <?php echo $_POST["achternaam"]; ?> </div> 
+                            
                             <input type="hidden" name="email" value="<?php echo $_POST["email"]; ?>">
                             <div><strong>E-mail: </strong><?php echo $_POST["email"]; ?> </div>
 
-                            <input type="hidden" name="address" value="<?php echo $_POST["address"]; ?>">      
-                            <div><strong>Adres: </strong><?php echo $_POST["address"]; ?> </div>
+                            <input type="hidden" name="straat" value="<?php echo $_POST["straat"]; ?>">      
+                            <div><strong>Adres: </strong><?php echo $_POST["straat"]; ?> </div>
+                            
+                            <input type="hidden" name="huisnummer" value="<?php echo $_POST["huisnummer"]; ?>">    
+                            <div><strong>Huisnummer:</strong> <?php echo $_POST["huisnummer"]; ?> </div>
 
-                            <input type="hidden" name="city" value="<?php echo $_POST["city"]; ?>">
-                            <div><strong>Plaats:</strong> <?php echo $_POST["city"]; ?> </div>
+                            <input type="hidden" name="plaats" value="<?php echo $_POST["plaats"]; ?>">
+                            <div><strong>Plaats:</strong> <?php echo $_POST["plaats"]; ?> </div>
 
-                            <input type="hidden" name="zip" value="<?php echo $_POST["zip"]; ?>">        
-                            <div><strong>Postcode: </strong><?php echo $_POST["zip"]; ?> </div>
+                            <input type="hidden" name="postcode" value="<?php echo $_POST["postcode"]; ?>">        
+                            <div><strong>Postcode: </strong><?php echo $_POST["postcode"]; ?> </div>
 
                             <input type="hidden" name="cardname" value="<?php echo $_POST["cardname"]; ?>">       
                             <div><strong>Naam kaarthouder:</strong> <?php echo $_POST["cardname"]; ?> </div>
@@ -255,8 +278,7 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                             <input type="hidden" name="telefoonnummer" value="<?php echo $_POST["telefoonnummer"]; ?>">    
                             <div><strong>Telefoonnummer: </strong><?php echo $_POST["telefoonnummer"]; ?> </div>
 
-                            <input type="hidden" name="land" value="<?php echo $_POST["land"]; ?>">    
-                            <div><strong>Land:</strong> <?php echo $_POST["land"]; ?> </div>
+
                             <div><I>Door op de knop "Naar IDEAL betaalpagina" te klikken ga je akkoort met de bestelling en de ingevoerde gegevens.</I></div>
                             <input type="submit" class="btn btn-primary btn-success" data-target="#exampleModalCenter" name="betalen" value="Naar IDEAL betaalpagina"> <!-- knop naar succes.php -->
                             </form>

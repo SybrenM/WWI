@@ -1,8 +1,49 @@
 <?php
 session_start();
-include 'connection.php';
+require 'connection.php';
 $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
- if (isset($_POST["Naam"])) {     //sluit onder aan het bestand, zorgt ervoor dat je niet naar localhost/.../succes.php kan.                         
+ if (isset($_POST["voornaam"])) { 
+        $voornaam = $_POST['voornaam'];
+        $achternaam = $_POST['achternaam'];
+        $email = $_POST['email'];
+        $straat = $_POST['straat'];
+        $huisnummer = $_POST['huisnummer'];
+        $plaats = $_POST['plaats'];
+        $postcode = $_POST['postcode'];
+        $telefoonnummer = $_POST['telefoonnummer'];
+        $errMsg = '';
+        $date = date("Y-m-d");
+        $IDnumber = $conn->query('SELECT MAX(CustomerID) AS ID FROM customers');
+    $klantID = 0;
+while ($number = $IDnumber->fetch()) {
+        $klantID += "0" .$number["ID"] + 1;
+    }
+        $straatennummer = $straat . " " . $huisnummer . " " . $postcode;  
+   
+        $fullName = $voornaam . " " . $achternaam . " " . $klantID;
+    $data = [
+    'CustomerID' => $klantID,
+    'CustomerName' => $fullName,
+    'BillToCustomerID' => $klantID,
+    'CustomerCategoryID' => 1,
+    'DeliveryMethodID' => 1,
+    'DeliveryCityID' => $StadID,
+    'PostalCityID' => $StadID,
+    'AccountOpenedDate' => $date,
+    'Phonenumber' => $telefoonnummer,
+    'DeliveryAddressLine1' => $straatennummer,
+    'DeliveryAddressLine2' => $DeliveryAdressline2,
+    'DeliveryPostalCode' => $postcode,
+    'PostalAddressLine1' => $straatennummer,
+    'PostalAddressLine2' => $land,
+    'PostalPostalCode' => $postcode,
+    'LastEditedBy' => $1,
+];
+       
+$sql = "INSERT INTO customers (CustomerID, CustomerName, BillToCustomerID, CustomerCategoryID, DeliveryMethodID, DeliveryCityID, PostalCityID, AccountOpenedDate, Phonenumber, DeliveryAddressLine1, DeliveryAddressLine2, DeliveryPostalCode, PostalAddressLine1, PostalAddressLine2, PostalPostalCode, LastEditedBy)
+                      VALUES (:CustomerID, :CustomerName, :BillToCustomerID, :CustomerCategoryID, :DeliveryMethodID, :DeliveryCityID, :PostalCityID, :AccountOpenedDate, :Phonenumber, :DeliveryAddressLine1, :DeliveryAddressLine2, :DeliveryPostalCode, :PostalAddressLine1, :PostalAddressLine2, :PostalPostalCode, :LastEditedBy)";
+$stmt= $conn->prepare($sql);
+$stmt->execute($data);
 ?>
 
 <!doctype html>
@@ -28,10 +69,7 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
             <div class="card">
                 <div class="card-header">
                     <strong>Factuurnummer: </strong><?php
-$stmt = $conn->query("SELECT MAX(factuurID) FROM factuur");
-while($id = $stmt->fetch()){
-echo ($id["MAX(factuurID)"]) + 1;
-}
+
         ?>
                     <strong>Status:</strong> in behandeling
 
@@ -56,7 +94,7 @@ echo ($id["MAX(factuurID)"]) + 1;
                             <div>Email: info@wwi.com</div>
                             <div>Telefoonnummer: +316 12345678</div>
                         </div>
-
+   
                         <div class="col-sm-6">
                             <h6 class="mb-3">Naar:</h6>
                             <div>
@@ -69,8 +107,8 @@ echo ($id["MAX(factuurID)"]) + 1;
                             <div>Adres: <?php if (isset($_POST["address"])) {
                                     echo ($_POST["address"]);
                                 }
-                                ?>, <?php if (isset($_POST["city"])) {
-                                    echo ($_POST["city"]);
+                                ?>, <?php if (isset($_POST["plaats"])) {
+                                    echo ($_POST["plaats"]);
                                 }
                                 ?></div>
                             <div>Land:    <?php if (isset($_POST["land"])) {
@@ -200,7 +238,7 @@ echo ($id["MAX(factuurID)"]) + 1;
                             <div>E-mail: <?php echo $_POST["email"]; ?> </div>
                             <div>Adres: <?php echo $_POST["address"]; ?> </div>
 
-                            <div>Plaats: <?php echo $_POST["city"]; ?> </div>
+                            <div>Plaats: <?php echo $_POST["plaats"]; ?> </div>
                             <div>Postcode: <?php echo $_POST["zip"]; ?> </div>
                             <div>Naam kaarthouder: <?php echo $_POST["cardname"]; ?> </div>
                             <div>IBAN: <?php echo $_POST["IBAN"]; ?> </div>
@@ -221,29 +259,8 @@ echo ($id["MAX(factuurID)"]) + 1;
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     </body>
-<?php    } else {  header( "Location: index.php" ); //zorgt ervoor dat als je succes.php direct probeert te benaderen je index.php opent.
+ <?php  }else {  header( "Location: index.php" ); //zorgt ervoor dat als je succes.php direct probeert te benaderen je index.php opent.
 }
-$sql = "INSERT INTo factuur(klantnaam,
-            adres,
-            postcode,
-            stad,
-            land) VALUES (
-            :Naam, 
-            :address, 
-            :zip, 
-            :city, 
-            :land)";
-                                          
-$stmt = $conn->prepare($sql);
-                                              
-$stmt->bindParam(':Naam', $_POST['Naam'], PDO::PARAM_STR);       
-$stmt->bindParam(':address', $_POST['address'], PDO::PARAM_STR); 
-$stmt->bindParam(':zip', $_POST['zip'], PDO::PARAM_STR);
-$stmt->bindParam(':city', $_POST['city'], PDO::PARAM_STR); 
-$stmt->bindParam(':land', $_POST['land'], PDO::PARAM_STR);   
-                                      
-$stmt->execute(); 
-
 ?>
 
 </html>
