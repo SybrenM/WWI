@@ -23,6 +23,7 @@ $categorie = filter_input(INPUT_GET, "categorie", FILTER_SANITIZE_STRING);
 
 
         <div class="container">
+            <form action="vergelijk.php">
             <!-- Hier komt de lijst met artikelen die een bepaald categorie hebben -->
             <?php
             $query = $conn->query("SELECT * FROM stockitems SI JOIN stockitemstockgroups SISG on SI.StockItemID = SISG.StockItemID WHERE SISG.StockgroupID = " . $categorie);
@@ -71,6 +72,7 @@ $categorie = filter_input(INPUT_GET, "categorie", FILTER_SANITIZE_STRING);
                             </div>
                             <div class="col-lg-4 col-md-4 col-sm-12">
                                 <?php print("<h3 class='artikelPrijs'>€" . $artikelPrijs . "</h3>"); ?>
+                                <input type="checkbox" name="vergelijk[]" value="<?php print($artikelID); ?>">Vergelijk
                             </div>
                             <hr style="width:80%">
                         </div>
@@ -82,6 +84,8 @@ $categorie = filter_input(INPUT_GET, "categorie", FILTER_SANITIZE_STRING);
                 }
             }
             ?>
+            <button class="btn btn-primary vergelijk" type="submit">Vergelijk</button>
+            </form>
         </div>
 
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
