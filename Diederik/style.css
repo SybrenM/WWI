@@ -68,6 +68,13 @@ nav {
     color: #FFF !important;
 }
 
+.iframe{
+    margin-top: -200px;
+    z-index: 1;
+    margin-top: -50px;
+    margin-left: 150px;
+}
+
 .vergelijk {
     position: fixed !important;
     bottom: 10px !important;

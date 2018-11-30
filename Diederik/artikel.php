@@ -65,8 +65,8 @@ $sizeProblem = FALSE;
                     <div class="col-lg-6" >
                         <div class="w3-content w3-section">
                             <img src="artikelFoto/foto/<?php print($artikelID); ?>.jpg"  class="mySlides w3-animate-fading" width="500px" height="500px">
-                            <img src="artikelFoto/foto/<?php print($artikelID+1); ?>.jpg"  class="mySlides w3-animate-fading" width="500px" height="500px">
-                            <img src="artikelFoto/foto/<?php print($artikelID-1); ?>.jpg"  class="mySlides w3-animate-fading" width="500px" height="500px">
+                            <img src="artikelFoto/foto/<?php print($artikelID + 1); ?>.jpg"  class="mySlides w3-animate-fading" width="500px" height="500px">
+                            <img src="artikelFoto/foto/<?php print($artikelID - 1); ?>.jpg"  class="mySlides w3-animate-fading" width="500px" height="500px">
 
                         </div>
 
@@ -190,6 +190,11 @@ $sizeProblem = FALSE;
                         print("<BR><BR>Selecteer eerst een maat");
                     }
                     ?>
+                    <div class="row">
+                        <iframe width="750px" height="450px"  class="iframe"
+                                src="https://www.youtube.com/embed/7cjVj1ZyzyE"
+                                frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                    </div>
                 </div>
                 <!-- Optional JavaScript -->
                 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
