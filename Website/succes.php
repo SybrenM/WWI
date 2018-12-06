@@ -21,12 +21,13 @@ if (isset($_POST["voornaam"])) {   //als voornaam is ingevuld op de vorige pagin
         $date = date("Y-m-d");
         $IDnumber = $conn->query('SELECT MAX(CustomerID) AS ID FROM customers'); //IDnumber = het hoogste CustetomerID
         $klantID = 0;
+	$zero = 0;
+	
         while ($number = $IDnumber->fetch()) { 
-        $klantID += "0" .$number["ID"] + 1; //klantID word hier ingesteld doormiddel van hoogste CustomerID +1
+        $klantID +=  $number["ID"] + 1; //klantID word hier ingesteld doormiddel van hoogste CustomerID +1
     }
         $straatennummer = $straat . " " . $huisnummer;  
-        $CustomerID = 100 . $klantID;
-        echo $CustomerID;
+        $CustomerID = $klantID;
         $fullName = $voornaam . " " . $achternaam . " " . $klantID; //fullname is voornaam en achternaam + klantID zo zijn alle namen uniek
   
         
@@ -87,17 +88,16 @@ if (isset($_POST["voornaam"])) {   //als voornaam is ingevuld op de vorige pagin
                          
                         
                         $stmt8 = $conn->prepare('INSERT INTO invoices (InvoiceID, CustomerID, BillToCustomerID, DeliveryMethodID) VALUES (:InvoiceID, :CustomerID, :BillToCustomerID, :DeliveryMethodID)');
-
+			$insertPeople =	$conn->prepare('INSERT INTO people (PersonID, FullName, PreferredName, IsPermittedToLogon, PhoneNumber, HashedPassword, IsSystemUser, IsEmployee, IsSalesPerson, LastEditedBy)
+                                     VALUES (:ID, :naam, :voornaam, 1, :telefoonnummer, :wachtwoord, 0, 0, 0, 1)');
                         $stmt15 = $conn->prepare('INSERT INTO customers (CustomerID, CustomerName, BillToCustomerID, CustomerCategoryID, DeliveryMethodID, DeliveryCityID, PostalCityID, AccountOpenedDate, Phonenumber, DeliveryAddressLine1, DeliveryPostalCode, PostalAddressLine1, PostalPostalCode, LastEditedBy)
                       VALUES (:CustomerID, :CustomerName, :BillToCustomerID, :CustomerCategoryID, :DeliveryMethodID, :DeliveryCityID, :PostalCityID, :AccountOpenedDate, :Phonenumber, :DeliveryAddressLine1, :DeliveryPostalCode, :PostalAddressLine1, :PostalPostalCode, :LastEditedBy)');
-
-    
-                        $stmt15->execute(array(
+			$insertPeople->execute(array ( ':ID' => $klantID, ':naam' => 'GEEN ACCOUNT', ':voornaam' => 'GEEN ACCOUNT', ':telefoonnummer' => $telefoonnummer, ':wachtwoord' => $telefoonnummer));
+			$stmt15->execute(array(
                             //De ingevulde informatie wordt in de database gezet//
-                            ':CustomerID' => $CustomerID, ':CustomerName' => $fullName, ':BillToCustomerID' => $CustomerID, ':CustomerCategoryID' => 1, ':DeliveryMethodID' => 1, ':DeliveryCityID' => $StadID, ':PostalCityID' => $StadID, ':AccountOpenedDate' => $date, ':Phonenumber' => $telefoonnummer, ':DeliveryAddressLine1' => $straatennummer, ':DeliveryPostalCode' => $postcode, ':PostalAddressLine1' => $straatennummer, ':PostalPostalCode' => $postcode, ':LastEditedBy' => 1));
-                                               $stmt8->execute(array(':InvoiceID' => $FactuurID, ':CustomerID' => $CustomerID, ':BillToCustomerID' => $CustomerID, 'DeliveryMethodID' => 1));
-
-                        
+			    ':CustomerID' => $klantID, ':CustomerName' => $fullName, ':BillToCustomerID' => $klantID, ':CustomerCategoryID' => 1, ':DeliveryMethodID' => 1, ':DeliveryCityID' => $StadID, ':PostalCityID' => $StadID, ':AccountOpenedDate' => $date, ':Phonenumber' => $telefoonnummer, ':DeliveryAddressLine1' => $straatennummer, ':DeliveryPostalCode' => $postcode, ':PostalAddressLine1' => $straatennummer, ':PostalPostalCode' => $postcode, ':LastEditedBy' => 1));
+                                               $stmt8->execute(array(':InvoiceID' => $FactuurID, ':CustomerID' => $klantID, ':BillToCustomerID' => $klantID, 'DeliveryMethodID' => 1));
+		
                         
                                   $selectProducts = implode(',', $_SESSION['winkelwagen']);
                         $selectArticles = $conn->query("SELECT * FROM stockitems WHERE StockItemID IN (". $selectProducts .")");
@@ -127,14 +127,17 @@ if (isset($_POST["voornaam"])) {   //als voornaam is ingevuld op de vorige pagin
                     try {
                       
                        $stmt8 = $conn->prepare('INSERT INTO invoices (InvoiceID, CustomerID, BillToCustomerID, DeliveryMethodID) VALUES (:InvoiceID, :CustomerID, :BillToCustomerID, :DeliveryMethodID)');
-
+$insertPeople =	$conn->prepare('INSERT INTO people (PersonID, FullName, PreferredName, IsPermittedToLogon, PhoneNumber, HashedPassword, IsSystemUser, IsEmployee, IsSalesPerson, LastEditedBy)
+                                     VALUES (:ID, :naam, :voornaam, 1, :telefoonnummer, :wachtwoord, 0, 0, 0, 1)');
                         $stmt3 = $conn->prepare('INSERT INTO customers (CustomerID, CustomerName, BillToCustomerID, CustomerCategoryID, DeliveryMethodID, DeliveryCityID, PostalCityID, AccountOpenedDate, Phonenumber, DeliveryAddressLine1,  DeliveryPostalCode, PostalAddressLine1, PostalPostalCode, LastEditedBy)
                       VALUES (:CustomerID, :CustomerName, :BillToCustomerID, :CustomerCategoryID, :DeliveryMethodID, :DeliveryCityID, :PostalCityID, :AccountOpenedDate, :Phonenumber, :DeliveryAddressLine1,  :DeliveryPostalCode, :PostalAddressLine1, :PostalPostalCode, :LastEditedBy)');
 
+
+			$insertPeople->execute(array ( ':ID' => $klantID, ':naam' => 'GEEN ACCOUNT', ':voornaam' => 'GEEN ACCOUNT', ':telefoonnummer' => $telefoonnummer, ':wachtwoord' => $telefoonnummer));
                         $stmt3->execute(array(
                             //De ingevulde informatie wordt in de database gezet//
-                            ':CustomerID' => $CustomerID, ':CustomerName' => $fullName, ':BillToCustomerID' => $CustomerID, ':CustomerCategoryID' => 1, ':DeliveryMethodID' => 1, ':DeliveryCityID' => $CityID2, ':PostalCityID' => $CityID2, ':AccountOpenedDate' => $date, ':Phonenumber' => $telefoonnummer, ':DeliveryAddressLine1' => $straatennummer, ':DeliveryPostalCode' => $postcode, ':PostalAddressLine1' => $straatennummer, ':PostalPostalCode' => $postcode, ':LastEditedBy' => 1));
-                       $stmt8->execute(array(':InvoiceID' => $FactuurID, ':CustomerID' => $CustomerID, ':BillToCustomerID' => $CustomerID, 'DeliveryMethodID' => 1));
+                            ':CustomerID' =>  $zero.$klantID, ':CustomerName' => $fullName, ':BillToCustomerID' =>  $zero.$klantID, ':CustomerCategoryID' => 1, ':DeliveryMethodID' => 1, ':DeliveryCityID' => $CityID2, ':PostalCityID' => $CityID2, ':AccountOpenedDate' => $date, ':Phonenumber' => $telefoonnummer, ':DeliveryAddressLine1' => $straatennummer, ':DeliveryPostalCode' => $postcode, ':PostalAddressLine1' => $straatennummer, ':PostalPostalCode' => $postcode, ':LastEditedBy' => 1));
+                       $stmt8->execute(array(':InvoiceID' => $FactuurID, ':CustomerID' =>  $zero.$klantID, ':BillToCustomerID' =>  $zero.$klantID, 'DeliveryMethodID' => 1));
 
                        
                          $selectProducts = implode(',', $_SESSION['winkelwagen']);

@@ -25,7 +25,7 @@ while ($data = $stmt->fetch()) {
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="artikel-style.css">
         <link rel="stylesheet" type="text/css" href="style.css">
-        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+     <!--   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
         <title>Klantinformatie</title> 
@@ -37,7 +37,35 @@ $FullName = preg_replace('/[0-9]+/', '', (preg_replace('/([a-z0-9])?([A-Z])/', '
         <div class="container">
             <h1> Klant informatie </h1><br>
             <b> Afleverinformatie: </b>
-            Welcome <?php echo " " . $FullName  ?>
+            Welkom <?php echo " " . $FullName  ?>
+	    
+	    <?php 
+$selectInfo = $conn->prepare("SELECT * FROM customers JOIN cities on DeliveryCityID = CityID WHERE CustomerID = :CustomerID ");
+$selectInfo->execute(array(':CustomerID' => $_SESSION["ID"]));
+while($infoCustomer = $selectInfo->fetch()){
+?>
+<br> 
+<?php 
+echo "Telefoonnummer: ".$infoCustomer["PhoneNumber"];
+?>
+<br>
+<?php
+echo "Adres: ".$infoCustomer["DeliveryAddressLine1"];
+?>
+<br>
+<?php
+echo "Plaats: ".$infoCustomer["CityName"];
+?>
+<br>
+<?php
+echo "Postcode: ".$infoCustomer["DeliveryPostalCode"];
+?>
+<br>
+<br>
+<br>
+<?php
+}
+?>
 
 
 

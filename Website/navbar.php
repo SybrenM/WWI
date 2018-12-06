@@ -48,13 +48,29 @@
                 <a class="nav-link" href="winkelwagen.php">Winkelmand</a>
             </li>
             
-            <li class="nav-item">
+	    <?php 
+	    if(isset($_SESSION['email'])){
+	    $adminRights = $conn->prepare("SELECT * FROM people WHERE PersonID = :PersonID");
+	    $adminRights->execute(array(":PersonID" => $_SESSION["ID"]));
+	    $adminID = 0;
+	    while($adminCheck = $adminRights->fetch()){
+		$adminID += $adminCheck["IsSystemUser"];
+	    }
+		}if(isset($adminID) && $adminID == 1  ) { ?>
+	    <li class="nav-item">
+                        <a class="nav-link" href="bestellingen.php">Bestellingen</a>
+                    </li>
+	    <?php
+	    } else {
+	    ?>
+       
+                     <li class="nav-item">
                         <a class="nav-link" href="verlanglijstje.php">Verlanglijstje</a>
                     </li>
-                
               
                         
                         <?php
+			}
                                          if(isset($_SESSION['email'])) {
                                                     $email = $_SESSION['email'];
                         $stmt = $conn->prepare('SELECT FullName FROM people WHERE EmailAddress = :EmailAddress');

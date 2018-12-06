@@ -32,7 +32,7 @@
 
         try {
             //Hier worden het ingevoerde emailadres opgezocht in de database
-            $stmt = $conn->prepare('SELECT * FROM people WHERE EmailAddress = :email');
+            $stmt = $conn->prepare('SELECT * FROM people WHERE EmailAddress = :email AND IsPermittedToLogon = 0');
             $stmt->execute(array(
                 //Hier worden de eerder ingevulden variabelen ge-assigend aan de rijen in de database// 
                 ':email' => $email));
