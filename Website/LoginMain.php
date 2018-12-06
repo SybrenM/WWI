@@ -10,18 +10,17 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="artikel-style.css">
         <link rel="stylesheet" type="text/css" href="style.css">
-
-        <title>Hello, world!</title>
+        <title>Inloggen</title>
     </head>
+
     <?php
 //Dit is de pagina waar je naar verwezen wordt als je op "Login' klikt op de index pagina.
     include 'session.php';
     include 'connection.php';
-    include 'functions.php';
+
+    // Deze isset functie controleerd telkens of je verplichte velden hebt leeggelaten//
     if (isset($_POST['login'])) {
         $errMsg = '';
-        // Deze isset functie controleerd telkens of je verplichte velden hebt leeggelaten//
-       
         $email = $_POST['email'];
         $wachtwoord = $_POST['wachtwoord'];
         if ($email == '') {
@@ -30,27 +29,25 @@
         if ($wachtwoord == '') {
             $errMsg = 'Vul wachtwoord in';
         }
+
         try {
+            //Hier worden het ingevoerde emailadres opgezocht in de database
             $stmt = $conn->prepare('SELECT * FROM people WHERE EmailAddress = :email');
             $stmt->execute(array(
                 //Hier worden de eerder ingevulden variabelen ge-assigend aan de rijen in de database// 
-                ':email' => $email
-            ));
+                ':email' => $email));
             $data = $stmt->fetch();
             //Hier wordt gekeken of het gehashte wachtwoord in de database overeenkomt met het ingevulde wachtwoord.//
             if (password_verify($wachtwoord, $data['HashedPassword'])) {
                 //Hier wordt alle informatie uit de kolommen in sessies opgeslagen. Dit zorgt ervoor dat we deze informatie altijd kunnen ophalen na het inloggen//
-                $_SESSION['voornaam'] = $data['FullName'];
-                $_SESSION['achternaam'] = $data['PreferredName'];
                 $_SESSION['email'] = $data['EmailAddress'];
                 $_SESSION['ID'] = $data['PersonID'];
-                $_SESSION['IsPermittedToLogon'] = $data['IsPermittedToLogon'];
-                $_SESSION['IsExternalLogonProvider'] = $data['IsExternalLogonProvider'];
                 $_SESSION['IsSystemUser'] = $data['IsSystemUser'];
                 $_SESSION['IsEmployee'] = $data['IsEmployee'];
                 $_SESSION['IsSalesPerson'] = $data['IsSalesPerson'];
                 header('Location: index.php');
             } else {
+                //Als er een fout opdaagt, dan wordt dit vermeld
                 $errMsg = "Inloggen mislukt";
             }
         } catch (PDOException $e) {
@@ -59,25 +56,23 @@
     }
     ?>
 
-    <body><?php include 'navbar.php'; ?>
-
+    <body>
+        <?php include 'navbar.php'; ?>
         <div class="container">
-
             <h1> Inloggen </h1>
-
 
             <?php
             if (isset($errMsg)) {
                 echo '<div style="color:#FF0000;text-align:center;font-size:17px;">' . $errMsg . '</div>';
             }
             ?>
+            
+            <!--Dit is waar de informatie die ingevoerd wordt, wordt opgehaald-->
             <form action="" method="post">
-              
                 <input type="text" name="email"placeholder="E-Mail" autocomplete="off" class="box"/><br /><br />
                 <input type="password" name="wachtwoord" placeholder="Wachtwoord" autocomplete="off" class="box" /><br/><br />
                 <input type="submit" class="btn btn-primary" name='login' value="Login" class='submit'/><br />
             </form>
-
         </div>
 
         <!-- Optional JavaScript -->

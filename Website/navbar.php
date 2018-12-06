@@ -47,6 +47,31 @@
             <li class="nav-item">
                 <a class="nav-link" href="winkelwagen.php">Winkelmand</a>
             </li>
+            
+            <li class="nav-item">
+                        <a class="nav-link" href="verlanglijstje.php">Verlanglijstje</a>
+                    </li>
+                
+              
+                        
+                        <?php
+                                         if(isset($_SESSION['email'])) {
+                                                    $email = $_SESSION['email'];
+                        $stmt = $conn->prepare('SELECT FullName FROM people WHERE EmailAddress = :EmailAddress');
+                           $stmt->execute(array(
+                              ':EmailAddress' => $email
+                           ));
+                           while($data = $stmt->fetch()) {
+                               $FullName = $data['FullName'];
+                           }
+                         ?>
+                            
+                               
+                    <li class="nav-item">
+                        <a class="nav-link" href="klantinformatie.php"><?php echo preg_replace('/[0-9]+/', '', (preg_replace('/([a-z0-9])?([A-Z])/', '$1 $2', $FullName))); ?> </a>
+                        <?php } ?>
+                    </li>
+                    
 <?php if (!isset($_SESSION['email'])) { ?>
 
                 <li class="nav-item">

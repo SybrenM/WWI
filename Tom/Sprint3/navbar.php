@@ -58,11 +58,30 @@
 		    <?php } ?>
                     
                     <?php 
-                    if(isset($_SESSION['email'])) {
-                        if($_SESSION['IsSystemUser'] == 1){?>
+                    if(isset($_SESSION['email'])) { ?>
+                        
                     <li class="nav-item">
-                        <a class="nav-link" href="customerreview.php">Customer Reviews</a>
-                    <?php } } ?>
+                        <a class="nav-link" href="verlanglijstje.php">Verlanglijstje</a>
+                    </li>
+                
+                    <?php }  ?>
+                        
+                        <?php
+                                         if(isset($_SESSION['email'])) {
+                                                    $email = $_SESSION['email'];
+                        $stmt = $conn->prepare('SELECT FullName FROM people WHERE EmailAddress = :EmailAddress');
+                           $stmt->execute(array(
+                              ':EmailAddress' => $email
+                           ));
+                           while($data = $stmt->fetch()) {
+                               $FullName = $data['FullName'];
+                           }
+                         ?>
+                            
+                               
+                    <li class="nav-item">
+                        <a class="nav-link" href="klantinformatie.php"><?php echo preg_replace('/[0-9]+/', '', (preg_replace('/([a-z0-9])?([A-Z])/', '$1 $2', $FullName))); ?> </a>
+                        <?php } ?>
                     </li>
                 </ul>
             </div>

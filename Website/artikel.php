@@ -206,87 +206,148 @@ $sizeProblem = FALSE;
                     </div>
                 </div>
 		
-		      <?php if (isset($_SESSION['email'])) { ?>
-                    <b> <a href="review.php?artikelID=<?php echo $artikelID ?>">Laat een recensie achter!</a> </b>
+                <BR>
+                <!--Tom's verlanglijstje-->
+                <?php
+                //Voordat iets op het verlanglijstje kan, moet de maat worden geselecteerd. Hier wordt gekeken of de maatgeselecteerd is Als er voor het product geen maat is, dan is het geen issue. Als aan deze condities voldaan wordt, dan wordt een session geset met het specifieke product.
+                if ($maatSelected == 'TRUE' OR ! $sizeProblem) {
+                    if (empty($_SESSION['verlanglijstje'])) {
+                        $_SESSION['verlanglijstje'] = array();
+                        ?>
+                        <form action="verlanglijstje.php" method="post">
+                            <input type="hidden" value="<?php echo $artikelID; ?>" name="artikelid">
+                            <input type="hidden" name="number" value="1"> 
 
-                    <?php
+                            <input type="submit" value="Aan verlanglijstje toevoegen">
+                        </form>
+
+                        <?php
+                    }
+
+                    foreach ($_SESSION['verlanglijstje'] as $key => $value) {
+                        if ($artikelID == $value) {
+                            echo ' <br> U heeft dit artikel al op uw verlanglijstje staan';
+                            $exists = "";
+                        }
+                    }
+                    if (!isset($exists) && !empty($_SESSION['verlanglijstje'])) {
+                        ?>
+
+                        <form action="verlanglijstje.php" method="post">
+                            <input type="hidden" value="<?php echo $artikelID; ?>" name="artikelid">
+                            <input type="hidden" name="number" value="1"> 
+                            <input type="submit" value="Aan verlanglijstje toevoegen">
+                        </form>
+
+
+                        <?php
+                    }
                 } else {
-                    echo "You must be logged in to leave a review";
+                    //Als de maat nog niet is geselecteerd, dan wordt de klant hierop gewezen
+                    print("<BR><BR>Kan niet op verlanglijstje zetten. Selecteer eerst een maat ");
                 }
                 ?>
-                <hr style="width:80%" color="red">
-                <b> Reviews</b>
+
+                <!--Tom's Code Review-->
                 <?php
-                //Tom's Code Review
-                $stmt = $conn->prepare('SELECT * FROM review WHERE StockItemID = :artikelID ORDER BY date');
-                $stmt->execute(array(':artikelID' => $artikelID));
-
-
-
-                while ($data = $stmt->fetch()) {
-                    $PersonID = $data['PersonID'];
-                    $review = $data['review'];
-                    $reviewname = $data['reviewname'];
-                    $rating = $data['rating'];
-                    $PersonID = $data['PersonID'];
-                    $date = $data['date'];
-                    $reviewid = $data['reviewid'];
-
-                    $query = $conn->query('SELECT FullName FROM people WHERE PersonID =' . $PersonID);
-                    $query->execute(array(//Werkt ook niet
-                        ':PersonID' => $PersonID
-                    ));
-
-                    $data = $query->fetch();
-                    $FullName = $data['FullName'];
-                    ?>
-                    <?php
-                    try {
-                        $query2 = $conn->prepare('SELECT COUNT(*) FROM review WHERE StockItemID = :artikelid');
-                        $query2->execute(array(':artikelid' => $artikelID));
-                    } catch (PDOException $e) {
-                        echo $e->getMessage();
-                    }
-                    $reviewnumber = 0;
-
-                    while ($count = $query2->fetch()) {
-                        $reviewnumber += $count[0];
-                    }
-                    if ($reviewnumber > 0) {
+                //Hier wordt gecontroleerd of de $_SESSION['email'] is geset. als dit het geval is, dan kan de klant een review achterlaten. Als de klant neit is ingelogd, dan is het onmogelijk om de benodigde infomratie over de klant in te vullen
+                if (isset($_SESSION['email'])) {
+                    //Hier wordt gekeken of de klan/gebruiker een admin is, admins kunnen niet een review achterlaten maar wel reviews verwijderen. Verder in de code wordt dit duidelijk
+                    if ($_SESSION['IsSystemUser'] != 1) {
                         ?>
-                        <hr style="width:80%" color="red">
-                        <b> Review name: <?php echo $reviewname ?> </b>
-                        <hr style="width:80%" color="red">
-                        <b> By <?php echo(preg_replace('/([a-z0-9])?([A-Z])/', '$1 $2', $FullName)); ?> </b>    <BR>
-                        <hr style="width:80%" color="red">
-                        Review: <BR>
-        <?php echo $review; ?>
-                        <hr style="width:80%" color="red">
-        <?php echo $date ?>
-                        <hr style="width:80%" color="red">
-                        <?php
-                        if(isset($_SESSION['IsSystemUser'])) { ?>
-                       <b> <a href="verwijderrecensie.php?reviewid=<?php echo $reviewid?>artikelid=<?php echo $artikelID?>">Verwijder</a> </b>
-                        <?php } ?>
-                           <hr style="width:80%" color="red">
-                        Rating:
-                        <?php
-                        for ($i = 0; $i < $rating; $i++) {
-                            ?> <span class="fa fa-star checked"></span>
+                        <!--De klant kan dit alleen zien als hij is ingelogd-->
+                        <b> <a href="review.php?artikelID=<?php echo $artikelID ?>">Laat een recensie achter!</a> </b>
+                    <?php } else { ?>
+                        <!--Als de klant niet is igelogd, wordt dit weergeven. dit leidt naar de inlog pagina-->
+                        <b> <a href="LoginMain.php">U moet ingelogd zijn om een recensie achter te laten</a></b>
+                    <?php } ?>
+
+
+                    <hr style="width:80%" color="red">
+                    <b> Reviews</b> <BR>
+
+                    <?php
+//Hier worden de review uit de database gehaald die corresponderen met het artikelID
+                    $stmt = $conn->prepare('SELECT * FROM review WHERE StockItemID = :artikelID ORDER BY date');
+                    $stmt->execute(array(':artikelID' => $artikelID));
+//Hier wordt de opgehaalde informatie in variabelen gestopt
+                    while ($data = $stmt->fetch()) {
+                        $PersonID = $data['PersonID'];
+                        $review = $data['review'];
+                        $reviewname = $data['reviewname'];
+                        $rating = $data['rating'];
+                        $PersonID = $data['PersonID'];
+                        $date = $data['date'];
+                        $reviewid = $data['reviewid'];
+//Hier wordt de naam van de klant uit de database opgehaald
+                        $query = $conn->query('SELECT FullName FROM people WHERE PersonID =' . $PersonID);
+                        $query->execute(array(//Werkt ook niet
+                            ':PersonID' => $PersonID));
+//Hier wordt de naam van de klant in een variabele gezet
+                        $data = $query->fetch();
+                        $FullName = $data['FullName'];
+
+                        //Hier wordt gekeken of er reviews zijn achtergelaten. als dat zo is, dan worden de reviews die eerder werden opgehaald in een while loop gezet en onder elkaar weergeven
+                        try {
+                            $query2 = $conn->prepare('SELECT COUNT(*) FROM review WHERE StockItemID = :artikelid');
+                            $query2->execute(array(':artikelid' => $artikelID));
+                        } catch (PDOException $e) {
+                            echo $e->getMessage();
+                        }
+
+                        $reviewnumber = 0;
+                        while ($count = $query2->fetch()) {
+                            $reviewnumber += $count[0];
+                        }
+                        if ($reviewnumber > 0) {
+                            ?>
+
+                            <!--Dit is in feite de review, je hebt de naam van het review, de naam van de klant, het review zelf, de rating en de datum-->
+                            <BR> <b> Review naam: <?php echo $reviewname ?> </b>
+                            <BR> <b> Door <?php echo(preg_replace('/([a-z0-9])?([A-Z])/', '$1 $2', $FullName)); ?> </b>
+
+                            <BR> Review:
+                            <BR> <?php echo $review; ?>
+
+                            <BR> <?php
+                            if ($date != '') {
+                                echo $date;
+                            } else {
+                                echo "Geen datum ingfevoerd";
+                            }
+                            ?> 
+                            <BR> Beoordeling: 
                             <?php
-                        } if ($i < 5) {
-                            for ($j = 5; $j > $rating; $j--) {
-                                ?> <span class="fa fa-star unchecked"></span> <?php
+                            //Dit is het sterrensysteem. 
+                            for ($i = 0; $i < $rating; $i++) {
+                                ?> <span class="fa fa-star checked"></span>
+                                <?php
+                            } if ($i < 5) {
+                                for ($j = 5; $j > $rating; $j--) {
+                                    ?>  <?php
+                                }
+                            }
+                            ?> <BR> 
+                            <?php
+                            //Als de gebruiker een admin is, dan heeft hij de mogelijkheid om een review te verwijderen
+                            if (isset($_SESSION['IsSystemUser'])) {
+                                if ($_SESSION['IsSystemUser'] == 1) {
+                                    ?>
+                                    <b> <a href="verwijderrecensie.php?reviewid=<?php echo $reviewid ?>&artikelid=<?php echo $artikelID ?>">Verwijder</a> </b>
+                                <?php } ?>
+
+                                <BR>
+                            <?php } else {
+                                if (isset($_SESSION['email'])) {
+                                    ?>
+                                    <b> <a href="review.php?artikelID=<?php echo $artikelID ?>">Er zijn nog geen recensies. Wees de eerste om een recensie achter te laten!</a> </b> <?php
+                                }
                             }
                         }
-                        ?>
-
-
-                    <?php } else { ?>
-                        <b> <a href="review.php?artikelID=<?php echo $artikelID ?>">Er zijn nog geen recensies. Wees de eerste om een recensie achter te laten!</a> </b> <?php
                     }
                 }
                 ?>
+		   
                 <!-- Optional JavaScript -->
                 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
                 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

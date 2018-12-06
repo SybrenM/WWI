@@ -1,5 +1,5 @@
 <?php
-
+include 'session.php';
 include 'connection.php';
 //$artikelID = 1;
 //$stmt = $conn->query('SELECT * FROM review WHERE StockItemID = :fag');
@@ -26,12 +26,37 @@ include 'connection.php';
 //echo $FullName;
 //echo "test";
 //
-$string = "OverLord";
-function splitAtUpperCase($string){
-    return preg_replace('/([a-z0-9])?([A-Z])/','$1 $2',$string);
-}
 
-$string = 'setIfUnmodifiedSince';
-echo splitAtUpperCase($string);
+//$spatie = "Spatie" . " " . "Spatie";
+//echo $spatie;
+//$plaats = 'George';
+// $stmt3 = $conn->prepare('SELECT CityID FROM cities WHERE CityName = :plaats LIMIT 1');
+//        $stmt3->execute(array(':plaats' => $plaats));
+//        $CityID2 = 0;
+//        while ($query = $stmt3->fetch()) {
+//            $CityID2 += $query['CityID'];
+//            echo $query["CityID"];
+//        }
+//$_SESSION['email'] = "2";
+//    if(isset($_SESSION['email'])) {
+//                        $stmt = $conn->prepare('SELECT FullName FROM people WHERE EmailAddress = :EmailAddress');
+//                           $stmt->execute(array(
+//                              ':EmailAddress' => $_SESSION['email'] 
+//                           ));
+//                           while($data = $stmt->fetch()) {
+//                               $klantNaam = $data['FullName'];
+//                           }
+//                           echo $klantNaam;
+//    }
+
+//$stmtKlantInfo = $conn->prepare('SELECT * FROM customers WHERE CustomerID = :CustomerID');
+//$stmtKlantInfo->execute(array(':CustomerID' => $_SESSION['ID']));
+//while ($data = $stmtKlantInfo->fetch()) {
+//    $PersonID = $data['CustomerID'];
+//    $FullNameUntrimmed = $data['CustomerName'];
+//
+//echo $FullNameUntrimmed;  }
+$straat = 'Dorpstraat 15';
+ echo preg_replace('/\D/','',$straat);
 
 ?>
