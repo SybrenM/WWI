@@ -1,4 +1,9 @@
-
+<?php
+if (isset($zoekPagina)) {
+    } else {
+    $zoekPagina = FALSE;
+}
+?>
 <nav class="navbar navbar-expand-lg navbar-light"
      <!-- Hier is de home-knop -->
      <a class="navbar-brand" href="index.php">WideWorldImporters</a>
@@ -34,12 +39,12 @@
             <!-- Hier zit de zoekfunctie -->
             <form class="form-inline" action="zoek.php">
                 <input class="form-control mr-sm-2" type="search" placeholder="<?php
-                if (isset($_GET["zoek"])) {
-                    print($_GET["zoek"]);
-                } else {
-                    print("Zoek artikel...");
-                }
-                ?>" aria-label="Search" name="zoek">
+                    if ($zoekPagina) {
+                        print($_GET["zoek"]);
+                    } else {
+                        print("Zoek artikel...");
+                    }
+                    ?>" aria-label="Search" name="zoek">
                 <button class="btn btn-primary" type="submit">Zoeken</button>
 
 

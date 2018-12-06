@@ -20,12 +20,12 @@ include 'functions.php';
         <!-- Hier wordt de navbar opgevraagd -->
         <?php
         include 'navbar.php';
+        
+        //Voor volledige uitleg en toelichting, raadpleeg de technische documentatie
         if (isset($_GET['vergelijk'])) { //Als er een artikelnummer is doorgegeven vanaf de andere website, dan laat hij iets zien. Anders komt er een melding (Staat helemaal onderaan deze code)
             $vergelijkID = $_GET['vergelijk'];
-            $buttonCentratie = "40%";
-
-
-            //De volgende if-then-else statements kijken naar het aantal producten die vergeleken moet worden. Aan de hand van dat aantal wordt een margin ingesteld.
+            $buttonCentratie = "40%"; //Dit is een margin die er voor zorgt dat de verwijderknop bij artikelen in het midden van een div zit
+            //De volgende if-then-else statements kijken naar het aantal producten die vergeleken moet worden. Aan de hand van dat aantal wordt een margin ingesteld voor de container.
             $aantalArtikelen = count($vergelijkID);
             if ($aantalArtikelen > 5) {
                 if ($aantalArtikelen == 6) {
@@ -34,25 +34,22 @@ include 'functions.php';
                     $marginLeft = "0px";
                 }
             } else {
-                $marginLeft = ""; //Door niks in te vullen wordt een standaard van bootstrap gepakt
+                $marginLeft = ""; //Door niks in te vullen wordt de standaard van bootstrap gepakt
                 if ($aantalArtikelen == 1) {
                     $buttonCentratie = "100px";
                 }
             }
-
-
-                
-                ?>       
-                <style>
-                    .container {
-                        margin-left: <?php print($marginLeft); ?>
-                    }
-                </style>
-                <div class="container">
-                    <?php
-                                if ($aantalArtikelen > 50) {
-                print("<h5>Je kan niet meer dan 50 artikelen selecteren.</h5>");
-            } else {
+            ?>       
+            <style>
+                .container {
+                    margin-left: <?php print($marginLeft); ?>
+                }
+            </style>
+            <div class="container">
+                <?php
+                if ($aantalArtikelen > 50) { //Als er meer dan 50 artikelen worden geselecteerd; wordt ter beveiliging van de website (overload) niks ingeladen en komt er een melding.
+                    print("<h5>Je kan niet meer dan 50 artikelen selecteren.</h5>");
+                } else {
                     ?>
 
                     <table class="table">
@@ -63,11 +60,10 @@ include 'functions.php';
 
 
                                 <?php
-                                $actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-                                $nieuweLink = str_replace("vergelijk%5B%5D=" . $artikelID . "&", "", $actual_link);
-                                if ($nieuweLink == $actual_link) {
-                                    $nieuweLink = str_replace("vergelijk%5B%5D=" . $artikelID, "", $actual_link);
-                                }
+                                //Hier onder staat code voor de verwijder knop. Het haald de link van de adresbalk op, en haalt het desbetreffende artikelid hier uit en gebruik die uitkomst als link.
+                                
+                                $actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; //Hier wordt de ingevulde link opgehaald uit de adresbalk
+                                $nieuweLink = str_replace("vergelijk%5B%5D=" . $artikelID . "&", "", $actual_link); //Het desbetreffende artikelid wordt uit deze variable gehaald
                                 ?>
 
                                 <a class="btn-danger" style="margin: 0 <?php print($buttonCentratie); ?>;"  href="<?php print($nieuweLink); ?>"><button class="btn btn-danger">X</button></a>
@@ -87,10 +83,12 @@ include 'functions.php';
                                     $query = $conn->query("SELECT * FROM stockitems WHERE stockItemID = " . $artikelID);
                                     while ($row = $query->fetch()) {
                                         $artikelNaam = $row["StockItemName"]; //De naam van het artikel
+                                        $artikelID = $row["StockItemID"]; //Het ID van het artikel
                                     }
                                     ?>
                                     <th scope="col">
-                                        <?php print($artikelNaam); ?>
+                                        <a style="color: black;" href="artikel.php?artikelid=<?php print($artikelID); ?>&maatselected=FALSE"><?php print($artikelNaam); ?></a>
+
                                     </th>
                                 <?php } ?>
                             </tr>
@@ -147,26 +145,24 @@ include 'functions.php';
                                         $slogan = $row["MarketingComments"]; //Extra informatie om mee te verkopen (is soms NULL)
                                         ?>
                                         <td><?php
-                                            if ($slogan != '') {
+                                            if ($slogan != '') { //Als de slogan leeg is, komt er een melding dat er geen extra info beschikbaar is
                                                 print($slogan);
                                             } else {
                                                 print("<i>Geen extra informatie beschikbaar</i>");
                                             }
-                                    
                                             ?> </td>
                                         <?php
                                     }
                                 }
-        }
-                            } else {
-                                ?>
-                        <div class="container">        
-
-                            <?php print("<h5>Je hebt geen artikelen geselecteerd om te vergelijken.</h5>");
+                            }
+                        } else {
                             ?>
-                        </div><?php
-                    }
-                
+                    <div class="container">        
+
+                        <?php print("<h5>Je hebt geen artikelen geselecteerd om te vergelijken.</h5>");
+                        ?>
+                    </div><?php
+                }
                 ?>
 
 

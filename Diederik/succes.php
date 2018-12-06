@@ -2,7 +2,7 @@
 session_start();
 include 'connection.php';
 $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
- if (isset($_POST["Naam"])) {                              
+ if (isset($_POST["Naam"])) {     //sluit onder aan het bestand, zorgt ervoor dat je niet naar localhost/.../succes.php kan.                         
 ?>
 
 <!doctype html>
@@ -19,17 +19,15 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
 
 
 
-
         <title>Factuur</title>
     </head>
     <body>
-  <?php include 'navbar.php'; ?>
-
+  <?php include 'navbar.php'; ?>    <!-- navbar code in navbar.php -->
         <div class="container">
             <div class="card">
                 <div class="card-header">
                     <strong>Factuurnummer: </strong><?php
-                    $factuurnummer = rand(100000000, 999999999);
+                    $factuurnummer = rand(100000000, 999999999); //random factuurnummer
                     print($factuurnummer . " ");
                     ?>
                     <strong>Status:</strong> in behandeling
@@ -38,7 +36,7 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                         <strong>Factuurdatum: </strong><span id="datetime"></span>
 
                         <script>
-                            var dt = new Date();
+                            var dt = new Date(); //automatiche tijd op vactuur
                             document.getElementById("datetime").innerHTML = (("0" + dt.getDate()).slice(-2)) + "." + (("0" + (dt.getMonth() + 1)).slice(-2)) + "." + (dt.getFullYear()) + " " + (("0" + dt.getHours()).slice(-2)) + ":" + (("0" + dt.getMinutes()).slice(-2));
                         </script> 
                     </span>
@@ -61,7 +59,7 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                             <div>
                                 <strong>Klantgegevens</strong>
                             </div>
-                            <div>T.A.V.: <?php if (isset($_POST["Naam"])) {
+                            <div>T.A.V.: <?php if (isset($_POST["Naam"])) { //de ingevulde waardes in afrekenen.php
                                     echo ($_POST["Naam"]);
                                 }
                                 ?></div>
@@ -181,7 +179,7 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                     <form action="index.php" method="POST">
                         <div class="row float-right">
                             <div class="col-50">
-                                <input type="submit" value="Terug naar de homepagina" class="btn btn-primary ">
+                                <input type="submit" value="Terug naar de homepagina" class="btn btn-primary "> <!-- knop terug naar index.php -->
                                 </form>
                             </div>
                         </div>
@@ -195,7 +193,7 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
 
                     <form action="succes.php" method="POST">
                         <div class="container check">
-                            <div>Naam: <?php echo $_POST["Naam"]; ?> </div> 
+                            <div>Naam: <?php echo $_POST["Naam"]; ?> </div> <!-- controle vak met de ingevoerde gegevens -->
                             <div>E-mail: <?php echo $_POST["email"]; ?> </div>
                             <div>Adres: <?php echo $_POST["address"]; ?> </div>
 
@@ -211,6 +209,7 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                 <?php
             }
             ?>
+ 
 
         </div>
         <!-- Optional JavaScript -->
@@ -219,7 +218,7 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     </body>
-<?php    } else {  header( "Location: index.php" ); 
+<?php    } else {  header( "Location: index.php" ); //zorgt ervoor dat als je succes.php direct probeert te benaderen je index.php opent.
 }
 ?>
 </html>

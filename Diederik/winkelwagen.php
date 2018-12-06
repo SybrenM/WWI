@@ -89,8 +89,9 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                             <div> Aantal: <?php
                                 foreach ($_SESSION['winkelwagen'] as $key => $value) {
 //Als de session Key van winkelwagen met de opteller '$i' gelijk is aan de session Key van winkelwagen
-                                    if ($keys[$i] == $key) {
-                                        echo ($_SESSION['aantal'][$key]);
+                                    if ($keys[$i] == $key) { ?>
+				       <input type="text" value="<?php echo ($_SESSION['aantal'][$key]); ?>" name="aantal[<?php echo $key?>]">
+					<?php
                                     }
                                 }
                                 ?></div>
