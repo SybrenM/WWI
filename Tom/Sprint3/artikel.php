@@ -67,6 +67,7 @@ $sizeProblem = FALSE;
         <body>
             <!-- Hier wordt de navbar opgevraagd -->
             <?php include 'navbar.php'; ?>
+
             <!-- Hier komt de pagina zelf -->
             <div class="container">
                 <div class="row">
@@ -154,6 +155,23 @@ $sizeProblem = FALSE;
                             <div class="description">Extra informatie: <?php print($slogan); ?> </div>
                         </div>
                     </div>
+<?php
+if ($maxCount > 10000) {
+    $maxCount = $maxCount / 5;
+    echo "Het maximum aantal dat u van " . $artikelNaam . " kan bestellen is ". round($maxCount) . ".";
+} elseif ($maxCount > 1000 && $maxCount < 10000) {
+    $maxCount = $maxCount / 7;
+    echo "Het maximum aantal dat u van " . $artikelNaam . " kan bestellen is ". round($maxCount) . ".";
+} elseif ($maxCount < 100) {
+    $maxCount = $maxCount;
+    echo "Het maximum aantal dat u van " . $artikelNaam . " kan bestellen is ". round($maxCount) . ".";
+} else {
+    $maxCount = $maxCount / 7;
+   echo "Het maximum aantal dat u van " . $artikelNaam . " kan bestellen is ". round($maxCount) . ".";
+}
+?></div>
+                        </div>
+                    </div>
 
                     <?php
                 } print($derdePartij);
@@ -164,7 +182,20 @@ $sizeProblem = FALSE;
                         ?>
                         <form action="winkelwagen.php" method="post">
                             <input type="hidden" value="<?php echo $artikelID; ?>" name="artikelid">
-                            <input type="number" name="number" onkeypress="return event.charCode >= 48" min="1"> <!-- Hier moet nog een maximum komen (Maximum moet variable van de voorraad zijn -->
+                            <input type="number" name="number" onkeypress="return event.charCode >= 48" min="1" max="<?php echo round($maxCount)?>"> <!-- Hier moet nog een maximum komen (Maximum moet variable van de voorraad zijn -->
+                            <input type="submit" value="Aan winkelmand toevoegen">
+                        </form>
+                    
+                    <?php
+                } print($derdePartij);
+                //Hier wordt gekeken of het maatprobleem aan de orde is en of in dat geval de maat al geselecteerd is
+                if ($maatSelected == 'TRUE' OR ! $sizeProblem) {
+                    if (empty($_SESSION['winkelwagen'])) {
+                        $_SESSION['winkelwagen'] = array();
+                        ?>
+                        <form action="winkelwagen.php" method="post">
+                            <input type="hidden" value="<?php echo $artikelID; ?>" name="artikelid">
+                            <input type="number" name="number" onkeypress="return event.charCode >= 48" min="1" max="<?php echo round($maxcount)?>"> <!-- Hier moet nog een maximum komen (Maximum moet variable van de voorraad zijn -->
                             <input type="submit" value="Aan winkelmand toevoegen">
                         </form>
 
@@ -285,15 +316,16 @@ if($reviewnumber > 0) { ?>
                   
                         
                         
-                        if ($reviewnumber > 0) { ?>
+                        if ($reviewnumber > 0) { 
                             
        //Hier wordt gekeken of de klan/gebruiker een admin is, admins kunnen niet een review achterlaten maar wel reviews verwijderen. Verder in de code wordt dit duidelijk
                         
-                        
+                        ?>
                             <!--Dit is in feite de review, je hebt de naam van het review, de naam van de klant, het review zelf, de rating en de datum-->
                             <BR> <b> Review naam: <?php echo $reviewname ?> </b>
                             <BR> <b> Door <?php echo(preg_replace('/([a-z0-9])?([A-Z])/', '$1 $2', $FullName)); ?> </b>
                             <BR> Review:
+
                             <BR> <?php echo $review; ?>
                             <BR> <?php                            if ($date != '') {
                                 echo $date;
@@ -337,7 +369,7 @@ if($reviewnumber > 0) { ?>
                     
             
                          <b> <a href="LoginMain.php">U moet ingelogd zijn om een recensie achter te laten</a></b>
-             
+                <?php }}}}} ?>
 
                 <!-- Optional JavaScript -->
                 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

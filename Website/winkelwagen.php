@@ -32,7 +32,12 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
         <div class="container">
 
             <h1> Winkelmand </h1>
+            <form action="" method="post">
             <?php
+            
+            if(isset($_POST["opslaan"])){
+                $_SESSION["aantal"] = $_POST["aantal"];
+                }
             // Als session leeg is, maak een nieuwe array
             if (empty($_SESSION['winkelwagen'])) {
                 $_SESSION['winkelwagen'] = array();
@@ -46,7 +51,7 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
             if (isset($_POST['artikelid']) && isset($_POST['number']) && $_POST['number'] >= 1) {
                 array_push($_SESSION['winkelwagen'], $_POST['artikelid']);
                 array_push($_SESSION['aantal'], $_POST['number']);
-                asort($_SESSION['winkelwagen']);
+                asort($_SESSION['winkelwagen']); //Waardes sorteren in Session array "winkelwagen"
             } elseif (isset($_POST['number']) && $_POST['number'] < 1) {
                 echo 'U moet eerst een aantal invullen';
                 goto a;
@@ -60,7 +65,6 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                 $totalePrijs = 0;
 
                 $keys = array_keys($_SESSION['winkelwagen']);
-                asort($_SESSION['winkelwagen']); //waardes sorteren in Session array "winkelwagen"
 
                 while ($artikel = $row->fetch(PDO::FETCH_ASSOC)) {
                     $artikelNaam = $artikel["StockItemName"];
@@ -90,7 +94,7 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                                 foreach ($_SESSION['winkelwagen'] as $key => $value) {
 //Als de session Key van winkelwagen met de opteller '$i' gelijk is aan de session Key van winkelwagen
                                     if ($keys[$i] == $key) { ?>
-				       <input type="text" value="<?php echo ($_SESSION['aantal'][$key]); ?>" name="aantal[<?php echo $key?>]">
+				       <input type="text" value="<?php echo ($_SESSION['aantal'][$key]); ?>" name="aantal[<?php echo $key?>]" min="1">
 					<?php
                                     }
                                 }
@@ -117,16 +121,23 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
             <?php } ?>
 
         </div>
-
-
+        
         <div class="row">
             <div class="offset-lg-8">
-                <button type="button" class="btn btn-verder btn-lg">  <a class="winkelwagenlinkjes" href="index.php">Verder Winkelen</a></button>
-                <?php if (isset($totalePrijs)) { ?>
-                    <button type="button" class="btn btn-verder btn-lg">  <a class="winkelwagenlinkjes" href="afrekenen.php">Afrekenen</a></button>  
+                <input type="submit" value="opslaan" name="opslaan" class="btn btn-verder btn-lg winkelwagenlinkjes">
+                </form>
+            
+            <button type="button" class="btn btn-verder btn-lg"> <a class="winkelwagenlinkjes" href="index.php">Verder Winkelen</a></button>
+             <?php if (isset($totalePrijs)) { ?>
+            <form action="afrekenen.php" method="post">
+                <br>
+                <br>
+                <input type="submit" class="btn btn-verder btn-success winkelwagenlinkjes" value="afrekenen">
+        </form>
                 <?php } ?>
             </div>
         </div>
+
     </div>
     <?php a: ?>
     <!-- Optional JavaScript -->

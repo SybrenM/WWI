@@ -187,13 +187,13 @@ $PostalAddressLine = $DeliveryAddressLine2;
                 <input type="password" name="wachtwoord2" placeholder="Wachtwoord herhalen" 
                        class="box" /><span style="color: red;"> *</span><br/><br />
                 <input type="text" name="straat2" placeholder="Straat (Optioneel)"         
-                       autocomplete="off" class="box"/><span style="color: red;"> *</span><br /><br />
+                       autocomplete="off" class="box"/><br><br>
                 <input type="text" name="huisnummer2" placeholder="Huisnummer (Optioneel)"         
-                       autocomplete="off" class="box"/><span style="color: red;"> *</span><br /><br />
+                       autocomplete="off" class="box"/><br><br>
                 <input type="text" name="plaats2" placeholder="Plaats (Optioneel)"         
-                       autocomplete="off" class="box"/><span style="color: red;"> *</span><br /><br />
+                       autocomplete="off" class="box"/><br><br>
                 <input type="text" name="postcode2" placeholder="Postcode (Optioneel)"         
-                       autocomplete="off" class="box"/><span style="color: red;"> *</span><br /><br />
+                       autocomplete="off" class="box"/><br /><br />
                 <input type="submit" class="btn btn-primary" name='register' value="Registreer" class='submit'/><br />
             </form>
         </div>

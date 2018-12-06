@@ -109,11 +109,3 @@ span.price {
     margin-bottom: 20px;
   }
 }
-
-.checked {
-    color: red;
-}
-
-.unchecked {
-    color: black;
-}

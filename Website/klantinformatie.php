@@ -1,17 +1,16 @@
 <?php
+
 include 'session.php';
 include 'connection.php';
 include 'functions.php';
 
-$stmtKlantInfo = $conn->prepare('SELECT * FROM customers WHERE CustomerID = :CustomerID');
-$stmtKlantInfo->execute(array(':CustomerID' => $_SESSION['ID']));
-while ($data = $stmtKlantInfo->fetch()) {
+$email = $_SESSION['email'];
+$stmt = $conn->prepare('SELECT * FROM customers WHERE CustomerID = :CustomerID');
+$stmt->execute(array(':CustomerID' => $_SESSION['ID']));
+while ($data = $stmt->fetch()) {
     $PersonID = $data['CustomerID'];
     $FullNameUntrimmed = $data['CustomerName'];
 }
-    $email = $_SESSION['email'];
-   
- 
 ?>
 
 <!doctype html>
@@ -38,7 +37,7 @@ $FullName = preg_replace('/[0-9]+/', '', (preg_replace('/([a-z0-9])?([A-Z])/', '
         <div class="container">
             <h1> Klant informatie </h1><br>
             <b> Afleverinformatie: </b>
-            Welcome <?php echo " " . $FullName ?>
+            Welcome <?php echo " " . $FullName  ?>
 
 
 

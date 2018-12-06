@@ -23,39 +23,30 @@ body {
 }
 
 .slide {
-    max-width: 100% !important; 
-    max-height: 100% !important; 
+   max-width: 100% !important; 
+   max-height: 100% !important; 
 }
 
 .carousel-control.left {
-    background: rgba(0, 0, 0, 0) !important;
+	background: rgba(0, 0, 0, 0) !important;
 
 
 }
 .carousel-control.right {
-    background: rgba(0, 0, 0, 0) !important;
+	background: rgba(0, 0, 0, 0) !important;
 }
 
 .carousel-control {
-    color: #1a75ff !important;
-    opacity: 1 !important;
+	color: #1a75ff !important;
+	opacity: 1 !important;
 
 }
 
-.winkelmandToevoegenAantal {
-    width: 250px !important;
-    margin: 5px !important;
-    margin-bottom: 2.5px !important;
+.checked {
+    color: red !important;
 }
 
-.winkelmandToevoegen {
-    width: 250px !important;
-    background-color: #1a75ff !important;
-    color: #FFF !important;
-    margin: 5px !important;
-    margin-bottom:  5px !important;
+.unchecked {
+    color: black !important;
 }
 
-.winkelmandToevoeg {
-    width: 250px !important;
-}

@@ -217,6 +217,109 @@ if ($maxCount > 10000) {
                     print("<BR><BR>Selecteer eerst een maat");
                 }
                 ?>
+           <!--Tom's Code Review-->
+                <?php
+                      //Hier wordt gekeken of er reviews zijn achtergelaten. als dat zo is, dan worden de reviews die eerder werden opgehaald in een while loop gezet en onder elkaar weergeven
+                        try {
+                            $query2 = $conn->prepare('SELECT COUNT(*) FROM review WHERE StockItemID = :artikelid');
+                            $query2->execute(array(':artikelid' => $artikelID));
+                        } catch (PDOException $e) {
+                            echo $e->getMessage();
+                        }
+
+                        $reviewnumber = 0;
+                        while ($count = $query2->fetch()) {
+                            $reviewnumber += $count[0];
+                        }
+                //Hier wordt gecontroleerd of de $_SESSION['email'] is geset. als dit het geval is, dan kan de klant een review achterlaten. Als de klant neit is ingelogd, dan is het onmogelijk om de benodigde infomratie over de klant in te vullen
+                if (isset($_SESSION['email'])) { 
+             
+if($reviewnumber > 0) { ?>
+                       <b> <a href="review.php?artikelid=<?php echo $artikelID ?>">Laat een recensie achter!</a> </b> <?php
+    
+} else { ?>
+<b> <a href="review.php?artikelID=<?php echo $artikelID ?>">Er zijn nog geen recensies. Wees de eerste om een recensie achter te laten!</a> </b>  <?php }
+?>
+                    <hr style="width:80%" color="red">
+                    <b> Reviews</b> <BR>
+
+                    <?php
+//Hier worden de review uit de database gehaald die corresponderen met het artikelID
+                    $stmt = $conn->prepare('SELECT * FROM review WHERE StockItemID = :artikelID ORDER BY date');
+                    $stmt->execute(array(':artikelID' => $artikelID));
+//Hier wordt de opgehaalde informatie in variabelen gestopt
+                    while ($data = $stmt->fetch()) {
+                        $PersonID = $data['PersonID'];
+                        $review = $data['review'];
+                        $reviewname = $data['reviewname'];
+                        $rating = $data['rating'];
+                        $PersonID = $data['PersonID'];
+                        $date = $data['date'];
+                        $reviewid = $data['reviewid'];
+//Hier wordt de naam van de klant uit de database opgehaald
+                        $query = $conn->query('SELECT FullName FROM people WHERE PersonID =' . $PersonID);
+                        $query->execute(array(//Werkt ook niet
+                            ':PersonID' => $PersonID));
+//Hier wordt de naam van de klant in een variabele gezet
+                        $data = $query->fetch();
+                        $FullName = $data['FullName'];
+
+                  
+                        
+                        
+                        if ($reviewnumber > 0) { 
+                            
+       //Hier wordt gekeken of de klan/gebruiker een admin is, admins kunnen niet een review achterlaten maar wel reviews verwijderen. Verder in de code wordt dit duidelijk
+                        ?>
+                        
+                            <!--Dit is in feite de review, je hebt de naam van het review, de naam van de klant, het review zelf, de rating en de datum-->
+                            <BR> <b> Review naam: <?php echo $reviewname ?> </b>
+                            <BR> <b> Door <?php echo(preg_replace('/([a-z0-9])?([A-Z])/', '$1 $2', $FullName)); ?> </b>
+                            <BR> Review:
+                            <BR> <?php echo $review; ?>
+                            <BR> <?php                            if ($date != '') {
+                                echo $date;
+                            } else {
+                                echo "Geen datum ingevoerd";
+                            }
+                            ?> 
+                            
+                            <BR> Beoordeling:
+                            
+                            <?php
+                            //Dit is het sterrensysteem. 
+                            for ($i = 0; $i < $rating; $i++) {
+                                ?> <span class="fa fa-star checked"></span>
+                                <?php
+                            } if ($i < 5) {
+                                for ($j = 5; $j > $rating; $j--) {
+                                    ?>  <?php
+                                }
+                            }
+                            ?> <BR>
+                            
+                            <?php
+                            //Als de gebruiker een admin is, dan heeft hij de mogelijkheid om een review te verwijderen
+                            if (isset($_SESSION['IsSystemUser'])) {
+                                if ($_SESSION['IsSystemUser'] == 1) {
+                                    ?>
+                                    <b> <a href="verwijderrecensie.php?reviewid=<?php echo $reviewid ?>&artikelid=<?php echo $artikelID ?>">Verwijder</a> </b>
+                                <?php } ?>
+
+                                <BR>
+                           
+                            
+                        
+                    
+                 
+        
+                    <!--Als de klant niet is igelogd, wordt dit weergeven. dit leidt naar de inlog pagina-->
+                     
+                    
+                    
+            
+                         <b> <a href="LoginMain.php">U moet ingelogd zijn om een recensie achter te laten</a></b>
+             
 
                 <!-- Optional JavaScript -->
                 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

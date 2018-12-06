@@ -33,13 +33,13 @@
             </li>-->
             <!-- Hier zit de zoekfunctie -->
             <form class="form-inline" action="zoek.php">
-                <input class="form-control mr-sm-2" type="search" placeholder="<?php
+               <input class="form-control mr-sm-2" type="search" placeholder="<?php
                 if (isset($_GET["zoek"])) {
                     print($_GET["zoek"]);
                 } else {
                     print("Zoek artikel...");
                 }
-                ?>" aria-label="Search" name="zoek">
+                ?>" aria-label="Search" name="zoek"> 
                 <button class="btn btn-primary" type="submit">Zoeken</button>
 
 
@@ -61,8 +61,8 @@
                            $stmt->execute(array(
                               ':EmailAddress' => $email
                            ));
-                           while($data = $stmt->fetch()) {
-                               $FullName = $data['FullName'];
+                           while($data1 = $stmt->fetch()) {
+                               $FullName = $data1['FullName'];
                            }
                          ?>
                             
