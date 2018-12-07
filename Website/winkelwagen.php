@@ -70,6 +70,23 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                     $artikelNaam = $artikel["StockItemName"];
                     $artikelID = $artikel["StockItemID"];
                     $artikelPrijs = $artikel["RecommendedRetailPrice"];
+		    
+		    
+			$stmt = $conn->query("SELECT QuantityOnHand FROM stockitemholdings WHERE StockItemID = " . $artikelID);
+			while ($maxArtikel = $stmt->fetch()) {
+			$maxCount = $maxArtikel["QuantityOnHand"];
+			}
+						
+			  if ($maxCount > 10000) {
+                                $maxCount = $maxCount / 5;
+                            } elseif ($maxCount > 1000 && $maxCount < 10000) {
+                                $maxCount = $maxCount / 7;
+                            } elseif ($maxCount < 100) {
+                                $maxCount = $maxCount;
+                            } else {
+                                $maxCount = $maxCount / 7;
+                            }
+			    
 
                     foreach ($_SESSION['winkelwagen'] as $key => $value) {
 //Als de session Key van winkelwagen met de opteller '$i' gelijk is aan de session Key van winkelwagen
@@ -94,7 +111,7 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                                 foreach ($_SESSION['winkelwagen'] as $key => $value) {
 //Als de session Key van winkelwagen met de opteller '$i' gelijk is aan de session Key van winkelwagen
                                     if ($keys[$i] == $key) { ?>
-				       <input type="text" value="<?php echo ($_SESSION['aantal'][$key]); ?>" name="aantal[<?php echo $key?>]" min="1">
+				       <input type="number" value="<?php echo ($_SESSION['aantal'][$key]); ?>" name="aantal[<?php echo $key?>]" min="1" max="<?php echo round($maxCount);?>">
 					<?php
                                     }
                                 }

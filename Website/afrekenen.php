@@ -71,14 +71,14 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                             <div class="col-50">
                                 <h3>Betaal adres</h3>
                                 <label for="fname"><i class="fa fa-user"></i> Voornaam</label>
-                                <input type="text" id="fname" name="voornaam" placeholder="Henk " value="<?php
+                                <input type="text" id="fname" name="voornaam" pattern="[A-Za-z]"  placeholder="Henk " value="<?php
                                     if(isset($data["PreferredName"])){ //Als PreferredName is ingevuld en gevonden door de uitgevonden query hierboven dan kunnen de volgende echo's uitgevoerd worden.
                                     echo ($data['PreferredName']);
                                     }
                                 
                                 ?>"  readonly> <!-- De ingevulde waardes die uit de database komen mogen in dit geval niet veranderd worden om fouten te voorkomen, dit mag bij adres wel. -->
                                 <label for="aname"><i class="fa fa-user"></i> Achternaam</label>
-                                <input type="text" id="fname" name="achternaam" placeholder="de Groot" value="<?php
+                                <input type="text" id="fname" name="achternaam" pattern="[A-Za-z]"  placeholder="de Groot" value="<?php
                                                                    
                                 $different = str_replace($data["PreferredName"], '', $data['FullName']); //filtert de voornaam uit de voledige naam zodat alleen de achternaam word weergegeven.
                                 echo preg_replace('/[0-9]+/', '', $different); //Fullname is uniek gesteld door het CustomerID er achter te plakken, door dit stuk code word het CustomerID eruit gefiltert en word dus alleen de achternaam weergegeven.
@@ -86,34 +86,34 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                                 
                                 ?>" readonly>
                                 <label for="email"><i class="fa fa-envelope"></i> Email</label>
-                                <input type="text" id="email" name="email" placeholder="hdegroot@example.com" value="<?php
+                                <input type="text" id="email" name="email" pattern="[A-Za-z0-9-@.]" placeholder="hdegroot@example.com" value="<?php
                                     echo ($_SESSION['email']); // de sessie email is aanwezig als je ingelogt bent en kan dus zo weergegeven worden.
                                 
                                 ?>" readonly>
-                                <label for="adr"><i class="fa fa-straat-card-o"></i> Adres</label>
-                                <input type="text" id="adr" name="straat" placeholder="Dorpstraat" value="<?php
+                                <label for="adr"><i class="fa fa-straat-card-o"></i> Straat</label>
+                                <input type="text" id="adr" name="straat" pattern="[A-Za-z]" placeholder="Dorpstraat" value="<?php
                                     echo str_replace("-", "", preg_replace('/[0-9]+/', '', $data['DeliveryAddressLine1'])); // zelfde geld voor achternaam, in deliveryline1 word straat en huisnummer opgeslagen en dus filteren we het huisnummer uit de data.
                                 
                                 ?>" required>
                                 <label for="land"><i class="fa"></i> Huisnummer</label>
-                                <input type="text" id="huisnummer" name="huisnummer" placeholder="12" value="<?php
+                                <input type="text" id="huisnummer"  pattern="[A-Za-z0-9]" name="huisnummer" placeholder="12" value="<?php
                                     echo preg_replace('/\D/', '',$data['DeliveryAddressLine1']); //in deliveryline1 word straat en huisnummer opgeslagen, hier worden de letters eruit gefiltert zodat je alleen huisnummer overhoud.
                                 
                                 ?>" required> <!-- De volgende vakken mogen niet leeg zijn maar mogen wel gewijzigd worden, dit is omdat klanten wel eens kunnen verhuizen, in succes.php word laten zien hoe de wijzigingen doorgevoerd worden in de database. -->
                                 <label for="plaats"><i class="fa"></i> Plaats</label>
-                                <input type="text" id="plaats" name="plaats" placeholder="Zwolle" value="<?php
+                                <input type="text" id="plaats" name="plaats" pattern="[A-Za-z]" placeholder="Zwolle" value="<?php
                                     echo ($data['CityName']); //in de query was ook een join van cities meegenomen, tijdens de registratie is het CityID bepaald en de daarbij horen de CityName. Hoe dit precies word bepaalt kun je vinden in de documentatie van de registratie.
                                 
                                 ?>" required>
                                 <div class="row">
                                     <div class="col-50">
                                         <label for="postcode">Postcode</label>   
-                                        <input type="text" id="postcode" name="postcode" placeholder="9999XY" value="<?php
+                                        <input type="text" id="postcode" name="postcode" pattern="[A-Za-z0-9]" placeholder="9999XY" value="<?php
                                     echo ($data['DeliveryPostalCode']); //postcode word geprint uit de query, hier geld ook voor dat het vak niet leeg mag zijn maar wel gewijzigd kan worden.
                                 
                                        ?>" required>
                                         <label for="telefoonnummer"><i class="fa"></i> Telefoonnummer</label>
-                                        <input type="text" id="telefoonnummer" name="telefoonnummer" placeholder="0623478282" value="<?php
+                                        <input type="text" id="telefoonnummer" name="telefoonnummer" pattern="[0-9]" placeholder="0623478282" value="<?php
                                         echo ($data['16']); //telefoonnummer word hier geprint uit de query, hier geld ook voor dat het vak niet leeg mag zijn maar wel gewijzigd kan worden.
                                         
                                         ?>" required>
@@ -129,13 +129,13 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                                     <img src="ideal3.jpg" alt="ideal"> <!-- ideal logo -->
                                 </div>
                                 <label for="cname">Naam kaarthouder</label>
-                                <input type="text" id="cname" name="cardname" placeholder="Henk de Groot" value="<?php
+                                <input type="text" id="cname" name="cardname" pattern="[A-Za-z]+" placeholder="Henk de Groot" value="<?php
                                 if (isset($_POST["cardname"])) { //De ingevulde waarden blijven staan zodra je op een knop drukt, zo hou je overzicht in je gegevens.
                                     echo ($_POST["cardname"]); //de $_POST methode zorgt ervoor dat de ingevulde gegevens mee worden genomen naar de volgende pagina zodat de waardes ook op de volgende pagina te printen zijn.
                                 } // dit veld is verplicht (mag niet leeg zijn)
                                 ?>" required>
                                 <label for="ccnum">IBAN</label>
-                                <input type="text" id="ccnum" name="IBAN" placeholder="NL70 RABO 0123 4567 89" value="<?php
+                                <input type="text" id="ccnum" name="IBAN" pattern="[A-Za-z0-9]+" placeholder="NL70 RABO 0123 4567 89" value="<?php
                                 if (isset($_POST["IBAN"])) {
                                     echo ($_POST["IBAN"]); //zie cardname
                                 }
@@ -143,7 +143,7 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                                 <div class="row">
                                     <div class="col-50">
                                         <label for="pasnummer">Pasnummer</label>
-                                        <input type="text" id="pasnummer" name="pasnummer" placeholder="3522" value="<?php
+                                        <input type="text" id="pasnummer" name="pasnummer" pattern="[A-Z0-9]+" placeholder="3522" value="<?php
                                         if (isset($_POST["pasnummer"])) {
                                             echo ($_POST["pasnummer"]); //zie cardname
                                         }
@@ -194,14 +194,14 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                                         }
                                 ?>" required>
                                 <label for="email"><i class="fa fa-envelope"></i> Email</label>
-                                <input type="text email" id="email" name="email" placeholder="hdegroot@example.com" value="<?php
+                                <input type="text" id="email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" placeholder="hdegroot@example.com" value="<?php
                                 if (isset($_POST["email"])) { //zie de informatie bij het veld voornaam
                                 echo (cleanemail($_POST["email"]));
                                         }
 
                                 ?>" required>
                                 <label for="adr"><i class="fa fa-straat-card-o"></i> Adres</label>
-                                <input type="text" id="adr" name="straat" placeholder="Dorpstraat" value="<?php
+                                <input type="text" id="adr" name="straat" pattern="[A-Za-Z]+" placeholder="Dorpstraat" value="<?php
                                 if (isset($_POST["straat"])) { //zie de informatie bij het veld voornaam
                                 echo (clean($_POST["straat"]));
                                         }
@@ -209,14 +209,14 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
  
                                 ?>" required>
                                 <label for="land"><i class="fa"></i> Huisnummer</label>
-                                <input type="text" id="huisnummer" name="huisnummer" placeholder="12" value="<?php
+                                <input type="text" id="huisnummer" name="huisnummer"  pattern="[0-9]+" placeholder="12" value="<?php
                                  if (isset($_POST["huisnummer"])) { //zie de informatie bij het veld voornaam
                                 echo (clean($_POST["huisnummer"]));
                                         }
 
                                 ?>" required>
                                 <label for="plaats"><i class="fa"></i> Plaats</label>
-                                <input type="text" id="plaats" name="plaats" placeholder="Zwolle" value="<?php
+                                <input type="text" id="plaats" name="plaats" pattern="[A-Za-z]+" placeholder="Zwolle" value="<?php
                                          if (isset($_POST["plaats"])) { //zie de informatie bij het veld voornaam
                                 echo (clean($_POST["plaats"]));
                                         }
@@ -225,14 +225,14 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                                 <div class="row">
                                     <div class="col-50">
                                         <label for="postcode">Postcode</label>   
-                                        <input type="text" id="postcode" name="postcode" placeholder="9999XY" value="<?php
+                                        <input type="text" id="postcode" name="postcode" pattern="[A-Za-z0-9]+" placeholder="9999XY" maxlength="6" value="<?php
                                 if (isset($_POST["postcode"])) { //zie de informatie bij het veld voornaam
                                 echo (clean($_POST["postcode"]));
                                         }
 
                                        ?>" required>
                                         <label for="telefoonnummer"><i class="fa"></i> Telefoonnummer</label>
-                                        <input type="text" id="telefoonnummer" name="telefoonnummer" placeholder="0623478282" value="<?php
+                                        <input type="text" id="telefoonnummer" name="telefoonnummer" pattern="[0-9-+-]+" placeholder="0623478282" value="<?php
                                  if (isset($_POST["telefoonnummer"])) { //zie de informatie bij het veld voornaam
                                 echo (clean($_POST["telefoonnummer"]));
                                         }
@@ -249,13 +249,13 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                                     <img src="ideal3.jpg" alt="ideal"> <!-- ideal logo -->
                                 </div>
                                 <label for="cname">Naam kaarthouder</label>
-                                <input type="text" id="cname" name="cardname" placeholder="Henk de Groot" value="<?php
+                                <input type="text" id="cname" name="cardname" pattern="[A-Za-z]+" placeholder="Henk de Groot" value="<?php
                                 if (isset($_POST["cardname"])) {
                                     echo (clean($_POST["cardname"])); //zie de informatie bij het veld voornaam
                                 }
                                 ?>" required>
                                 <label for="ccnum">IBAN</label>
-                                <input type="text" id="ccnum" name="IBAN" placeholder="NL70 RABO 0123 4567 89" value="<?php
+                                <input type="text" id="ccnum" name="IBAN" pattern="[A-Za-z0-9]+" placeholder="NL70 RABO 0123 4567 89" value="<?php
                                 if (isset($_POST["IBAN"])) { //zie de informatie bij het veld voornaam
                                     echo (clean($_POST["IBAN"]));
                                 }
@@ -263,7 +263,7 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                                 <div class="row">
                                     <div class="col-50">
                                         <label for="pasnummer">Pasnummer</label>
-                                        <input type="text" id="pasnummer" name="pasnummer" placeholder="3522" value="<?php
+                                        <input type="text" id="pasnummer" name="pasnummer" pattern="[0-9]+" placeholder="3522" maxlength="4" value="<?php
                                         if (isset($_POST["pasnummer"])) { //zie de informatie bij het veld voornaam
                                             echo (clean($_POST["pasnummer"]));
                                         }
