@@ -22,16 +22,7 @@ $sizeProblem = FALSE;
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
         <link rel="stylesheet" type="text/css" href="artikel-style.css">
         <link rel="stylesheet" type="text/css" href="style.css">
-        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
-        <style>
-            .placeholder{
-                max-width: 100%;
-            }
-            .description, .prijs{
-                margin-top: 100px;
-            }
-        </style>
         <title>Hello, world!</title> 
     </head>
     <?php
@@ -74,8 +65,8 @@ $sizeProblem = FALSE;
                     <div class="col-lg-6" >
                         <div class="w3-content w3-section">
                             <img src="artikelFoto/foto/<?php print($artikelID); ?>.jpg"  class="mySlides w3-animate-fading" width="500px" height="500px">
-                            <img src="artikelFoto/foto/<?php print($artikelID+1); ?>.jpg"  class="mySlides w3-animate-fading" width="500px" height="500px">
-                            <img src="artikelFoto/foto/<?php print($artikelID-1); ?>.jpg"  class="mySlides w3-animate-fading" width="500px" height="500px">
+                            <img src="artikelFoto/foto/<?php print($artikelID + 1); ?>.jpg"  class="mySlides w3-animate-fading" width="500px" height="500px">
+                            <img src="artikelFoto/foto/<?php print($artikelID - 1); ?>.jpg"  class="mySlides w3-animate-fading" width="500px" height="500px">
 
                         </div>
 
@@ -189,7 +180,7 @@ $sizeProblem = FALSE;
                             ?>
 
                             <form class="winkelmandToevoeg" action="winkelwagen.php" method="post">
-                                <input class="form-control winkelmandToevoegenAantal" type="hidden" value="<?php echo $artikelID; ?>" name="artikelid">
+                                <input class="form-control winkelmandToevoegenAantal" type="hidden" value="<?php echo $artikelID; ?>" name="artikelid"> <!-- Dit is het verborgen stukje dat het artikelID meegeeft -->
                                 <input class="form-control winkelmandToevoegenAantal" type="number" name="number" onkeypress="return event.charCode >= 48" min="1"> <!-- Hier moet nog een maximum komen (Maximum moet variable van de voorraad zijn -->
                                 <input class="btn winkelmandToevoegen" type="submit" value="Aan winkelmand toevoegen">
                             </form>
@@ -199,94 +190,12 @@ $sizeProblem = FALSE;
                         print("<BR><BR>Selecteer eerst een maat");
                     }
                     ?>
-		    <div class="row">
+                    <div class="row">
                         <iframe width="750px" height="450px"  class="iframe"
                                 src="https://www.youtube.com/embed/7cjVj1ZyzyE"
                                 frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                     </div>
                 </div>
-		
-		      <?php if (isset($_SESSION['email'])) { ?>
-                    <b> <a href="review.php?artikelID=<?php echo $artikelID ?>">Laat een recensie achter!</a> </b>
-
-                    <?php
-                } else {
-                    echo "You must be logged in to leave a review";
-                }
-                ?>
-                <hr style="width:80%" color="red">
-                <b> Reviews</b>
-                <?php
-                //Tom's Code Review
-                $stmt = $conn->prepare('SELECT * FROM review WHERE StockItemID = :artikelID ORDER BY date');
-                $stmt->execute(array(':artikelID' => $artikelID));
-
-
-
-                while ($data = $stmt->fetch()) {
-                    $PersonID = $data['PersonID'];
-                    $review = $data['review'];
-                    $reviewname = $data['reviewname'];
-                    $rating = $data['rating'];
-                    $PersonID = $data['PersonID'];
-                    $date = $data['date'];
-                    $reviewid = $data['reviewid'];
-
-                    $query = $conn->query('SELECT FullName FROM people WHERE PersonID =' . $PersonID);
-                    $query->execute(array(//Werkt ook niet
-                        ':PersonID' => $PersonID
-                    ));
-
-                    $data = $query->fetch();
-                    $FullName = $data['FullName'];
-                    ?>
-                    <?php
-                    try {
-                        $query2 = $conn->prepare('SELECT COUNT(*) FROM review WHERE StockItemID = :artikelid');
-                        $query2->execute(array(':artikelid' => $artikelID));
-                    } catch (PDOException $e) {
-                        echo $e->getMessage();
-                    }
-                    $reviewnumber = 0;
-
-                    while ($count = $query2->fetch()) {
-                        $reviewnumber += $count[0];
-                    }
-                    if ($reviewnumber > 0) {
-                        ?>
-                        <hr style="width:80%" color="red">
-                        <b> Review name: <?php echo $reviewname ?> </b>
-                        <hr style="width:80%" color="red">
-                        <b> By <?php echo(preg_replace('/([a-z0-9])?([A-Z])/', '$1 $2', $FullName)); ?> </b>    <BR>
-                        <hr style="width:80%" color="red">
-                        Review: <BR>
-        <?php echo $review; ?>
-                        <hr style="width:80%" color="red">
-        <?php echo $date ?>
-                        <hr style="width:80%" color="red">
-                        <?php
-                        if(isset($_SESSION['IsSystemUser'])) { ?>
-                       <b> <a href="verwijderrecensie.php?reviewid=<?php echo $reviewid?>artikelid=<?php echo $artikelID?>">Verwijder</a> </b>
-                        <?php } ?>
-                           <hr style="width:80%" color="red">
-                        Rating:
-                        <?php
-                        for ($i = 0; $i < $rating; $i++) {
-                            ?> <span class="fa fa-star checked"></span>
-                            <?php
-                        } if ($i < 5) {
-                            for ($j = 5; $j > $rating; $j--) {
-                                ?> <span class="fa fa-star unchecked"></span> <?php
-                            }
-                        }
-                        ?>
-
-
-                    <?php } else { ?>
-                        <b> <a href="review.php?artikelID=<?php echo $artikelID ?>">Er zijn nog geen recensies. Wees de eerste om een recensie achter te laten!</a> </b> <?php
-                    }
-                }
-                ?>
                 <!-- Optional JavaScript -->
                 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
                 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

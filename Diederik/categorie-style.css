@@ -51,3 +51,12 @@ body {
     }
     
 }
+
+.rij {
+	width: 100% !important;
+	text-align: center !important;
+}
+
+.vergelijkWeghalen {
+    background-color: #4CAF50 !important;
+}

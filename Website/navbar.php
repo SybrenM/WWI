@@ -58,7 +58,7 @@
 	    }
 		}if(isset($adminID) && $adminID == 1  ) { ?>
 	    <li class="nav-item">
-                        <a class="nav-link" href="bestellingen.php">Bestellingen</a>
+                        <a class="nav-link" href="bestellingen.php">Voorraad</a>
                     </li>
 	    <?php
 	    } else {

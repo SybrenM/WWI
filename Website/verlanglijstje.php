@@ -36,15 +36,14 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
             if (empty($_SESSION['verlanglijstje'])) {
                 $_SESSION['verlanglijstje'] = array();
             }
-            if (empty($_SESSION['aantal'])) {
+            if (empty($_SESSION['aantal2'])) {
                 $_SESSION['aantal'] = array();
             }
 
             // Als artikel  aantal groter dan 1 is, pushen we het aantal en artikel in een session array
             if (isset($_POST['artikelid']) && isset($_POST['number']) && $_POST['number'] >= 1) {
                 array_push($_SESSION['verlanglijstje'], $_POST['artikelid']);
-                array_push($_SESSION['aantal'], $_POST['number']);
-                asort($_SESSION['verlanglijstje']);
+                               asort($_SESSION['verlanglijstje']);
             } elseif (isset($_POST['number']) && $_POST['number'] < 1) {
                 echo 'Aantal moet groter dan 0 zijn';
             }
@@ -66,7 +65,7 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                     foreach ($_SESSION['verlanglijstje'] as $key => $value) {
 //Als de session Key van winkelwagen met de opteller '$i' gelijk is aan de session Key van winkelwagen
                         if ($keys[$i] == $key) {
-                            $totalePrijs += $artikelPrijs * $_SESSION['aantal'][$key];  //totale prijs berekening
+                            $totalePrijs += $artikelPrijs * $_SESSION['aantal2'][$key];  //totale prijs berekening
                         }
                     }
                     ?>

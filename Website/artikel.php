@@ -274,7 +274,7 @@ $sizeProblem = FALSE;
             <!--Tom's Code Review-->
             <?php
             //Hier wordt gecontroleerd of de $_SESSION['email'] is geset. als dit het geval is, dan kan de klant een review achterlaten. Als de klant neit is ingelogd, dan is het onmogelijk om de benodigde infomratie over de klant in te vullen
-            if (isset($_SESSION['email']) && isset($_SESSION['IsSystemUser']) && $_SESSION['IsSystemUser'] != 1) {
+            if (isset($_SESSION['email']) && isset($_SESSION['IsSystemUser']) && $_SESSION['IsSystemUser'] !== 1) {
                 //Hier wordt gekeken of de klan/gebruiker een admin is, admins kunnen niet een review achterlaten maar wel reviews verwijderen. Verder in de code wordt dit duidelijk
                 ?>
                 <!--De klant kan dit alleen zien als hij is ingelogd-->
@@ -325,7 +325,7 @@ $sizeProblem = FALSE;
 
                     <!--Dit is in feite de review, je hebt de naam van het review, de naam van de klant, het review zelf, de rating en de datum-->
                     <BR> <b> Review naam: <?php echo $reviewname ?> </b>
-                    <BR> <b> Door <?php echo(preg_replace('/([a-z0-9])?([A-Z])/', '$1 $2', $FullName)); ?> </b>
+                    <BR> <b> Door <?php echo preg_replace('/([0-9])/', '', (preg_replace('/([a-z0-9])?([A-Z])/', '$1 $2', $FullName))); ?> </b>
 
                     <BR> Review:
                     <BR> <?php echo $review; ?>

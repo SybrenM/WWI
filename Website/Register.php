@@ -42,8 +42,8 @@
             $fullName = $voornaam . " " . $achternaam . " " . $klantID;
             $straatennummer = $straat . " " . $huisnummer;
             $DeliveryAddressLine2 = $_POST['straat2'] . " " . $_POST['huisnummer2'] . " " . $_POST['plaats2'] . " " . $_POST['postcode2'];
-$PostalAddressLine = $DeliveryAddressLine2;
-    
+            $PostalAddressLine = $DeliveryAddressLine2;
+
 
             //Als de verplichte velden zijn leeggelaten, dan wordt een error message weergeven
             if ($voornaam == '') {
@@ -166,34 +166,36 @@ $PostalAddressLine = $DeliveryAddressLine2;
 
             <!-- Hier wordt de informatie opgehaald-->
             <form action="" method="post">
-                <input type="text" name="voornaam" placeholder="Voornaam"     
-                       autocomplete="off" class="box"/><?php if (isset($_POST['submit'])) { ?> <span style="color: red;"> *</span> <?php } ?> <br /><br />
-                <input type="text" name="achternaam" placeholder="Achternaam" 
-                       autocomplete="off" class="box"/><span style="color: red;"> *</span><br /><br />
-                <input type="text" name="email" placeholder="E-Mail" 
-                       autocompleter="off" class="box" /><span style="color: red;"> *</span><br/><br />
-                <input type="text" name="straat" placeholder="Straat"         
+                <input type="text" name="voornaam" placeholder="Voornaam" required  
+                       autocomplete="off" class="box" pattern="[A-Za-z]+"/><span style="color: red;"> *</span><br /><br />
+                <input type="text" name="achternaam" placeholder="Achternaam" required
+                       autocomplete="off" class="box" pattern="[A-Za-z]+"/><span style="color: red;" required> *</span><br /><br />
+                <input type="email" name="email" placeholder="E-Mail" 
+                       autocompleter="off" class="box" /><span style="color: red;" required> *</span><br/><br />
+                <input type="text" name="straat" pattern="[A-Za-z]+" placeholder="Straat"         
                        autocomplete="off" class="box"/>
-                <input type="text" name="huisnummer" placeholder="Huisnummer"         
+                <input type="text" name="huisnummer" placeholder="Huisnummer" pattern="[0-9]+" required       
                        autocomplete="off" class="box"/><span style="color: red;"> *</span><br /><br />
-                <input type="text" name="plaats" placeholder="Plaats"         
+                <input type="text" name="plaats" placeholder="Stad" pattern="[A-Za-z]+" required       
                        autocomplete="off" class="box"/>
-                <input type="text" name="postcode" placeholder="Postcode"         
+                <input type="text" name="postcode" placeholder="Postcode" pattern="[A-Za-z0-9]+" required      
                        autocomplete="off" class="box"/><span style="color: red;"> *</span><br /><br />
-                <input type="text" name="telefoonnummer" placeholder="Telefoonnummer"         
+                <input type="text" name="telefoonnummer" placeholder="Telefoonnummer" pattern="[0-9]+" required        
                        autocomplete="off" class="box"/><span style="color: red;"> *</span><br /><br />
-                <input type="password" name="wachtwoord" placeholder="Wachtwoord" 
+                <input type="password" name="wachtwoord" placeholder="Wachtwoord" required 
                        class="box" /><span style="color: red;"> *</span><br/><br />                       
-                <input type="password" name="wachtwoord2" placeholder="Wachtwoord herhalen" 
+                <input type="password" name="wachtwoord2" placeholder="Wachtwoord herhalen" required
                        class="box" /><span style="color: red;"> *</span><br/><br />
                 <input type="text" name="straat2" placeholder="Straat (Optioneel)"         
                        autocomplete="off" class="box"/><br><br>
-                <input type="text" name="huisnummer2" placeholder="Huisnummer (Optioneel)"         
+                
+                <input type="text" name="huisnummer2"  placeholder="Huisnummer (Optioneel)"         
                        autocomplete="off" class="box"/><br><br>
-                <input type="text" name="plaats2" placeholder="Plaats (Optioneel)"         
+                <input type="text" name="plaats2" placeholder="Plaats (Optioneel)"       
                        autocomplete="off" class="box"/><br><br>
                 <input type="text" name="postcode2" placeholder="Postcode (Optioneel)"         
                        autocomplete="off" class="box"/><br /><br />
+                
                 <input type="submit" class="btn btn-primary" name='register' value="Registreer" class='submit'/><br />
             </form>
         </div>

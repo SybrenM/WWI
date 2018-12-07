@@ -3,6 +3,8 @@
 include 'session.php';
 include 'connection.php';
 include 'functions.php';
+
+echo $_SESSION['ID'];
 ?>
 
 <!DOCTYPE html>

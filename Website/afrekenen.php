@@ -71,14 +71,14 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                             <div class="col-50">
                                 <h3>Betaal adres</h3>
                                 <label for="fname"><i class="fa fa-user"></i> Voornaam</label>
-                                <input type="text" id="fname" name="voornaam" pattern="[A-Za-z]"  placeholder="Henk " value="<?php
+                                <input type="text" id="fname" name="voornaam" pattern="[A-Za-z]+"  placeholder="Henk " value="<?php
                                     if(isset($data["PreferredName"])){ //Als PreferredName is ingevuld en gevonden door de uitgevonden query hierboven dan kunnen de volgende echo's uitgevoerd worden.
                                     echo ($data['PreferredName']);
                                     }
                                 
                                 ?>"  readonly> <!-- De ingevulde waardes die uit de database komen mogen in dit geval niet veranderd worden om fouten te voorkomen, dit mag bij adres wel. -->
                                 <label for="aname"><i class="fa fa-user"></i> Achternaam</label>
-                                <input type="text" id="fname" name="achternaam" pattern="[A-Za-z]"  placeholder="de Groot" value="<?php
+                                <input type="text" id="fname" name="achternaam" pattern="[A-Za-z]+"  placeholder="de Groot" value="<?php
                                                                    
                                 $different = str_replace($data["PreferredName"], '', $data['FullName']); //filtert de voornaam uit de voledige naam zodat alleen de achternaam word weergegeven.
                                 echo preg_replace('/[0-9]+/', '', $different); //Fullname is uniek gesteld door het CustomerID er achter te plakken, door dit stuk code word het CustomerID eruit gefiltert en word dus alleen de achternaam weergegeven.
@@ -86,34 +86,34 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                                 
                                 ?>" readonly>
                                 <label for="email"><i class="fa fa-envelope"></i> Email</label>
-                                <input type="text" id="email" name="email" pattern="[A-Za-z0-9-@.]" placeholder="hdegroot@example.com" value="<?php
+                                <input type="text" id="email" name="email" pattern="[A-Za-z0-9-@.]+" placeholder="hdegroot@example.com" value="<?php
                                     echo ($_SESSION['email']); // de sessie email is aanwezig als je ingelogt bent en kan dus zo weergegeven worden.
                                 
                                 ?>" readonly>
                                 <label for="adr"><i class="fa fa-straat-card-o"></i> Straat</label>
-                                <input type="text" id="adr" name="straat" pattern="[A-Za-z]" placeholder="Dorpstraat" value="<?php
-                                    echo str_replace("-", "", preg_replace('/[0-9]+/', '', $data['DeliveryAddressLine1'])); // zelfde geld voor achternaam, in deliveryline1 word straat en huisnummer opgeslagen en dus filteren we het huisnummer uit de data.
+                                <input type="text" id="adr" name="straat" pattern="[A-Za-Z]+" placeholder="Dorpstraat" value="<?php
+                                    echo trim(str_replace("-", "", preg_replace('/[0-9]+/', '', $data['DeliveryAddressLine1']))); // zelfde geld voor achternaam, in deliveryline1 word straat en huisnummer opgeslagen en dus filteren we het huisnummer uit de data.
                                 
                                 ?>" required>
                                 <label for="land"><i class="fa"></i> Huisnummer</label>
-                                <input type="text" id="huisnummer"  pattern="[A-Za-z0-9]" name="huisnummer" placeholder="12" value="<?php
+                                <input type="text" id="huisnummer"  pattern="[0-9]+" name="huisnummer" placeholder="12" value="<?php
                                     echo preg_replace('/\D/', '',$data['DeliveryAddressLine1']); //in deliveryline1 word straat en huisnummer opgeslagen, hier worden de letters eruit gefiltert zodat je alleen huisnummer overhoud.
                                 
                                 ?>" required> <!-- De volgende vakken mogen niet leeg zijn maar mogen wel gewijzigd worden, dit is omdat klanten wel eens kunnen verhuizen, in succes.php word laten zien hoe de wijzigingen doorgevoerd worden in de database. -->
                                 <label for="plaats"><i class="fa"></i> Plaats</label>
-                                <input type="text" id="plaats" name="plaats" pattern="[A-Za-z]" placeholder="Zwolle" value="<?php
+                                <input type="text" id="plaats" name="plaats" pattern="[A-Za-z]+" placeholder="Zwolle" value="<?php
                                     echo ($data['CityName']); //in de query was ook een join van cities meegenomen, tijdens de registratie is het CityID bepaald en de daarbij horen de CityName. Hoe dit precies word bepaalt kun je vinden in de documentatie van de registratie.
                                 
                                 ?>" required>
                                 <div class="row">
                                     <div class="col-50">
                                         <label for="postcode">Postcode</label>   
-                                        <input type="text" id="postcode" name="postcode" pattern="[A-Za-z0-9]" placeholder="9999XY" value="<?php
+                                        <input type="text" id="postcode" name="postcode" pattern="[A-Za-z0-9]+" placeholder="9999XY" value="<?php
                                     echo ($data['DeliveryPostalCode']); //postcode word geprint uit de query, hier geld ook voor dat het vak niet leeg mag zijn maar wel gewijzigd kan worden.
                                 
                                        ?>" required>
                                         <label for="telefoonnummer"><i class="fa"></i> Telefoonnummer</label>
-                                        <input type="text" id="telefoonnummer" name="telefoonnummer" pattern="[0-9]" placeholder="0623478282" value="<?php
+                                        <input type="text" id="telefoonnummer" name="telefoonnummer" pattern="[0-9]+" placeholder="0623478282" value="<?php
                                         echo ($data['16']); //telefoonnummer word hier geprint uit de query, hier geld ook voor dat het vak niet leeg mag zijn maar wel gewijzigd kan worden.
                                         
                                         ?>" required>
