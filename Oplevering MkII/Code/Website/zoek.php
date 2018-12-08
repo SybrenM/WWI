@@ -28,10 +28,18 @@ $zoek = filter_input(INPUT_GET, "zoek", FILTER_SANITIZE_STRING);
             try {
                 $search = $_GET['zoek'];
                 //Hier worden artikelen opgezocht waarbij de naam, de tags of zoekdetails lijken op een bepaalde zoekterm
-                $query = $conn->query("SELECT * FROM stockitems WHERE StockItemName LIKE '%" . $search . "%' OR SearchDetails LIKE '%" . $search . "%' OR Tags LIKE '%" . $search . "%'");
+		$query = $conn->prepare("SELECT * FROM stockitems WHERE StockItemName LIKE ? OR SearchDetails LIKE ? OR Tags LIKE ?");
+
+		//$query = $conn->prepare("SELECT * FROM stockitems WHERE StockItemName LIKE '% :search %' OR SearchDetails LIKE '% :search %' OR Tags LIKE '% :search %'");
+                //$query = $conn->prepare("SELECT * FROM stockitems WHERE StockItemName LIKE '%" . $search . "%' OR SearchDetails LIKE '%" . $search . "%' OR Tags LIKE '%" . $search . "%'");
+		$query->execute(array('%'.$search.'%', '%'.$search.'%', '%'.$search.'%'));
                 $count = $query->rowCount();
                 $artikelNaamTweedeKeer = '';
                 while ($row = $query->fetch()) {
+		   if($zoek == ''){
+		   echo "Er is geen waarde ingevuld";
+		   break;
+		   }
                     $artikelNaam = $row["StockItemName"]; //De naam van het artikel
                     $artikelID = $row["StockItemID"]; //Het ID van het artikel
                     $artikelPrijs = $row["RecommendedRetailPrice"]; //De prijs van het artikel
@@ -61,6 +69,9 @@ $zoek = filter_input(INPUT_GET, "zoek", FILTER_SANITIZE_STRING);
                             goto a; //Dit zorgt er voor dat het laten zien van de naam wordt overgeslagen. Nu gaat de code door naar het volgende artikel
                         }
                     }
+		    
+		    
+		
                     if (isset($artikelID)) {
                         ?>
                         <a href="artikel.php?artikelid=<?php print($artikelID . "&maatselected=FALSE"); ?>" class="artikelTekst">

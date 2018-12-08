@@ -33,13 +33,13 @@
             </li>-->
             <!-- Hier zit de zoekfunctie -->
             <form class="form-inline" action="zoek.php">
-                <input class="form-control mr-sm-2" type="search" placeholder="<?php
+               <input class="form-control mr-sm-2" type="search" placeholder="<?php
                 if (isset($_GET["zoek"])) {
                     print($_GET["zoek"]);
                 } else {
                     print("Zoek artikel...");
                 }
-                ?>" aria-label="Search" name="zoek">
+                ?>" aria-label="Search" name="zoek"> 
                 <button class="btn btn-primary" type="submit">Zoeken</button>
 
 
@@ -47,6 +47,47 @@
             <li class="nav-item">
                 <a class="nav-link" href="winkelwagen.php">Winkelmand</a>
             </li>
+            
+	    <?php 
+	    if(isset($_SESSION['email'])){
+	    $adminRights = $conn->prepare("SELECT * FROM people WHERE PersonID = :PersonID");
+	    $adminRights->execute(array(":PersonID" => $_SESSION["ID"]));
+	    $adminID = 0;
+	    while($adminCheck = $adminRights->fetch()){
+		$adminID += $adminCheck["IsSystemUser"];
+	    }
+		}if(isset($adminID) && $adminID == 1  ) { ?>
+	    <li class="nav-item">
+                        <a class="nav-link" href="bestellingen.php">Voorraad</a>
+                    </li>
+	    <?php
+	    } else {
+	    ?>
+       
+                     <li class="nav-item">
+                        <a class="nav-link" href="verlanglijstje.php">Verlanglijstje</a>
+                    </li>
+              
+                        
+                        <?php
+			}
+                                         if(isset($_SESSION['email'])) {
+                                                    $email = $_SESSION['email'];
+                        $stmt = $conn->prepare('SELECT FullName FROM people WHERE EmailAddress = :EmailAddress');
+                           $stmt->execute(array(
+                              ':EmailAddress' => $email
+                           ));
+                           while($data1 = $stmt->fetch()) {
+                               $FullName = $data1['FullName'];
+                           }
+                         ?>
+                            
+                               
+                    <li class="nav-item">
+                        <a class="nav-link" href="klantinformatie.php"><?php echo preg_replace('/[0-9]+/', '', (preg_replace('/([a-z0-9])?([A-Z])/', '$1 $2', $FullName))); ?> </a>
+                        <?php } ?>
+                    </li>
+                    
 <?php if (!isset($_SESSION['email'])) { ?>
 
                 <li class="nav-item">

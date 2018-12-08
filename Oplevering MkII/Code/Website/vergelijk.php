@@ -90,7 +90,7 @@ include 'functions.php';
                                     }
                                     ?>
                                     <th scope="col">
-                                        <?php print($artikelNaam); ?>
+                                        <a class="linkvergelijking" href="artikel.php?artikelid=<?php echo $artikelID ?>"><?php print($artikelNaam); ?></a>
                                     </th>
                                 <?php } ?>
                             </tr>
