@@ -1,0 +1,53 @@
+/*body {
+    background-color: #FFF !important;
+    
+    
+}
+.container {
+    background-color: #FFF !important;
+
+    
+}
+
+.artikel {
+    text-align: center;
+}
+*/
+.artikelImg{
+        max-width: 200px !important;
+        max-height: 200px !important;
+}
+
+body {
+    background-color: #EAE3EA;
+}
+.navbar{
+    background-color: #1a75ff !important;
+}
+
+.current{
+    background-color: #4d94ff !important;
+}
+.nav.navbar-nav li a {
+    color: #003300;
+}.navbar-brand {
+    color: #000 !important;
+}
+
+.container {
+    margin-top: 10px !important;
+}
+
+@media only screen and (max-width: 772px) {
+    .artikelImg{
+        display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    }   
+    
+    .artikelPrijs, .artikelTekst{
+        text-align: center;
+    }
+    
+}
