@@ -13,17 +13,22 @@
 
         <title>Registratie</title>
     </head>
+
     <?php
     include 'session.php';
     require 'connection.php';
 
-    //Hier wordt een ID gecreeeeerd
+    //Hier wordt een ID gecreeerd
     $IDnumber = $conn->query('SELECT MAX(PersonID) AS ID FROM people');
     $klantID = 0;
     while ($number = $IDnumber->fetch()) {
         $klantID += $number["ID"] + 1;
     }
+
+    //Hier wordt de errMsg gedefinieerd. Later wordt gecontroleerd of deze bestaat.
     $errMsg = '';
+    //Hier wordt de datum gecreeerd. de datum wordt later in de datbase gezet als de datum van wanneer het account is aangemaakt.
+    $date = date("Y-m-d");
 
     //Wanneer op de registratie-knop wordt gedrukt, wordt de onderstaande code uitgevoerd.
     if (isset($_POST['register'])) {
@@ -43,21 +48,6 @@
             $straatennummer = $straat . " " . $huisnummer;
             $DeliveryAddressLine2 = $_POST['straat2'] . " " . $_POST['huisnummer2'] . " " . $_POST['plaats2'] . " " . $_POST['postcode2'];
             $PostalAddressLine = $DeliveryAddressLine2;
-
-
-            //Als de verplichte velden zijn leeggelaten, dan wordt een error message weergeven
-            if ($voornaam == '') {
-                $errMsg = "Vul voornaam in";
-            }
-            if ($achternaam == '') {
-                $errMsg = "Vul achternaam in";
-            }
-            if ($passwordhash == '') {
-                $errMsg = "Vul wachtwoord in";
-            }
-            if ($email == '') {
-                $errMsg = "Vul email in";
-            }
 
             //Hier wordt het ID voor de stad aangemaakt als deze nog niet in de database staat
             $CityID = $conn->query('SELECT MAX(CityID) AS ID FROM cities');
@@ -84,9 +74,6 @@
                 while ($query = $stmt->fetch()) {
                     $countEmail = $query["Email"];
                 }
-
-                //Hier wordt de datum gecreeerd. de datum wordt later in de datbase gezet als de datum van wanneer het account is aangemaakt.
-                $date = date("Y-m-d");
 
                 //Als het ingevoerde emailadres niet in de database staat, dan wordt de ingevoerde gegevens in de database gezet
                 if ($countEmail < 1) {
@@ -122,6 +109,7 @@
                             while ($query3 = $stmt100->fetch()) {
                                 $StadID2 = $query3['CityID'];
                             }
+
                             $stmt10 = $conn->prepare('INSERT INTO people (PersonID, FullName, PreferredName, EmailAddress, PhoneNumber, HashedPassword, IsSystemUser, IsEmployee, IsSalesPerson, LastEditedBy) VALUES (:ID, :naam, :voornaam, :email, :telefoonnummer, :wachtwoord, 0, 0, 0, 1)');
                             $stmt3 = $conn->prepare('INSERT INTO customers (CustomerID, CustomerName, BillToCustomerID, CustomerCategoryID, DeliveryMethodID, DeliveryCityID, PostalCityID, AccountOpenedDate, Phonenumber, DeliveryAddressLine1, DeliveryAddressLine2, DeliveryPostalCode, PostalAddressLine1, PostalAddressLine2, PostalPostalCode, LastEditedBy)
                       VALUES (:CustomerID, :CustomerName, :BillToCustomerID, :CustomerCategoryID, :DeliveryMethodID, :DeliveryCityID, :PostalCityID, :AccountOpenedDate, :Phonenumber, :DeliveryAddressLine1, :DeliveryAddressLine2, :DeliveryPostalCode, :PostalAddressLine1, :PostalAddressLine2, :PostalPostalCode, :LastEditedBy)');
@@ -147,6 +135,7 @@
             $errMsg = "Passwords do not match";
         }
     }
+
 //Als op de "register' knop wordt gedrukt dan wordt een button zichtbaar die je herleid naar de homepage
     if (isset($_GET['action']) && $_GET['action'] == 'joined') {
         $errMsg = 'Registration succesful. Now you can <a href="LoginMain.php">Login</a>';
@@ -188,14 +177,14 @@
                        class="box" /><span style="color: red;"> *</span><br/><br />
                 <input type="text" name="straat2" placeholder="Straat (Optioneel)"         
                        autocomplete="off" class="box"/><br><br>
-                
+
                 <input type="text" name="huisnummer2"  placeholder="Huisnummer (Optioneel)"         
                        autocomplete="off" class="box"/><br><br>
                 <input type="text" name="plaats2" placeholder="Plaats (Optioneel)"       
                        autocomplete="off" class="box"/><br><br>
                 <input type="text" name="postcode2" placeholder="Postcode (Optioneel)"         
                        autocomplete="off" class="box"/><br /><br />
-                
+
                 <input type="submit" class="btn btn-primary" name='register' value="Registreer" class='submit'/><br />
             </form>
         </div>

@@ -67,8 +67,26 @@ echo "Postcode: ".$infoCustomer["DeliveryPostalCode"];
 }
 ?>
 
+<b> Bestellingen: </b><br>
 
+<?php
+ $InvoiceExist = $conn->prepare("SELECT COUNT(CustomerID) FROM invoices WHERE CustomerID = :CustomerID");
+            $InvoiceExist->execute(array(':CustomerID' => $_SESSION['ID']));
+            while ($CountInvoice = $InvoiceExist->fetch()) {
+                $InvoiceCount = $CountInvoice["COUNT(CustomerID)"];
+            }
 
+            if($InvoiceCount > 0) {
+                $InvoiceInfo = $conn->prepare('SELECT * FROM invoices WHERE CustomerID = :CustomerID');
+                $InvoiceInfo->execute(array(':CustomerID' => $_SESSION['ID']));
+                while ($InfoInvoice = $InvoiceInfo->fetch()) {
+                    echo 'Invoice ID: ' . $InfoInvoice['InvoiceID']; ?> <br> <?php
+                    echo 'Invoice date: ' . $InfoInvoice['InvoiceDate'];
+                }
+            } else {
+                echo 'Nog geen bestellingen gemaakt';
+            }
+?>
 
 
 
