@@ -1,0 +1,89 @@
+nav {
+    position: fixed !important;
+    z-index: 1 !important;
+    width: 100% !important;
+        top: 0 !important;
+}
+
+.placeholder{
+    max-width: 100%;
+}
+.description, .prijs{
+    margin-top: 100px;
+}
+
+.navbar-brand{
+    color: #FFF !important;
+}
+
+.linkvergelijking{
+	color: black !important;
+}
+.nav-link{
+    color: #FFF !important;
+}
+
+.container{
+    margin-top: 75px !important;
+}
+
+/* Clearfix (clear floats) */
+.row::after {
+    content: "" !important;
+    clear: both !important;
+    display: table !important;
+}
+
+.smallPicture {
+    padding: 10px !important;
+}
+
+.bigPicture {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    padding-bottom: 10px !important;
+}
+
+
+.navbar{
+    background-color: #1a75ff !important;
+    margin-right: 10px !important;
+    padding-left: 10px !important;
+}
+
+.current{
+    background-color: #4d94ff !important;
+}
+
+.btn-primary{
+    background-color: #135fd3 !important;
+}
+
+.artikelTekst {
+    color: rgba(0,0,0,1) !important;
+
+}
+.btn-lg {
+    background-color: #135fd3 !important;
+}
+
+.winkelwagenlinkjes {
+    color: #FFF !important;
+}
+
+.iframe{
+    margin-top: -200px;
+    z-index: 1;
+    margin-top: -50px;
+    margin-left: 150px;
+}
+
+.vergelijk {
+    position: fixed !important;
+    bottom: 10px !important;
+    float: right !important;
+    right: 150px !important;
+    width: 200px !important;
+    height: 50px !important;
+
+}

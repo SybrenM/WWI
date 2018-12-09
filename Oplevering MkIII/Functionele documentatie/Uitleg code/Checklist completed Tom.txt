@@ -1,0 +1,3 @@
+Code uitleg inlog-functie completed. do not touch.
+Code uitleg verlanglijstje completed. only thing left is the line numbers.
+Code uitleg verlanglijstje completed.

@@ -1,0 +1,52 @@
+body {
+    background-color: #FFF !important;
+
+
+}
+.container {
+    background-color: #FFF !important;
+
+
+}
+
+.artikel {
+    text-align: center;
+}
+
+.artikelImg{
+    max-width: 100%;
+}
+.kleur {
+    background-color: #1a75ff !important;
+    color: #FFF;
+
+}
+
+.slide {
+   max-width: 100% !important; 
+   max-height: 100% !important; 
+}
+
+.carousel-control.left {
+	background: rgba(0, 0, 0, 0) !important;
+
+
+}
+.carousel-control.right {
+	background: rgba(0, 0, 0, 0) !important;
+}
+
+.carousel-control {
+	color: #1a75ff !important;
+	opacity: 1 !important;
+
+}
+
+.checked {
+    color: red !important;
+}
+
+.unchecked {
+    color: black !important;
+}
+
