@@ -279,7 +279,7 @@ $sizeProblem = FALSE;
                 ?>
                 <!--De klant kan dit alleen zien als hij is ingelogd-->
                 <b> <a href="review.php?artikelID=<?php echo $artikelID ?>">Laat een recensie achter!</a> </b>
-            <?php } elseif(isset($_SESSION['IsSystemUser']) && $_SESSION['IsSystemUser'] != 1) { ?> <BR>
+            <?php } else { ?> <BR>
                 <!--Als de klant niet is igelogd, wordt dit weergeven. dit leidt naar de inlog pagina-->
                 <b> <a href="LoginMain.php">U moet ingelogd zijn om een recensie achter te laten</a></b>
             <?php } ?>
@@ -320,6 +320,7 @@ $sizeProblem = FALSE;
                 while ($count = $query2->fetch()) {
                     $reviewnumber += $count[0];
                 }
+                
                 if ($reviewnumber > 0) {
                     ?>
 
