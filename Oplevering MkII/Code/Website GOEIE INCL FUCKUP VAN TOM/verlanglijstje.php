@@ -4,6 +4,7 @@ include 'connection.php';
 include 'functions.php';
 $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
 ?>
+
 <!doctype html>
 <html lang="en">
     <head>
@@ -31,21 +32,20 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
     <body><?php include 'navbar.php'; ?>
         <div class="container">
             <h1> Verlanglijstje </h1>
+			
             <?php
             // Als session leeg is, maak een nieuwe array
             if (empty($_SESSION['verlanglijstje'])) {
                 $_SESSION['verlanglijstje'] = array();
             }
             if (empty($_SESSION['aantal2'])) {
-                $_SESSION['aantal'] = array();
+                $_SESSION['aantal2'] = array();
             }
 
             // Als artikel  aantal groter dan 1 is, pushen we het aantal en artikel in een session array
             if (isset($_POST['artikelid']) && isset($_POST['number']) && $_POST['number'] >= 1) {
                 array_push($_SESSION['verlanglijstje'], $_POST['artikelid']);
                                asort($_SESSION['verlanglijstje']);
-            } elseif (isset($_POST['number']) && $_POST['number'] < 1) {
-                echo 'Aantal moet groter dan 0 zijn';
             }
 
             if (!empty($_SESSION['verlanglijstje'])) {
@@ -61,14 +61,7 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                     $artikelNaam = $artikel["StockItemName"];
                     $artikelID = $artikel["StockItemID"];
                     $artikelPrijs = $artikel["RecommendedRetailPrice"];
-
-                    foreach ($_SESSION['verlanglijstje'] as $key => $value) {
-//Als de session Key van winkelwagen met de opteller '$i' gelijk is aan de session Key van winkelwagen
-                        if ($keys[$i] == $key) {
-                            $totalePrijs += $artikelPrijs * $_SESSION['aantal2'][$key];  //totale prijs berekening
-                        }
-                    }
-                    ?>
+                                   ?>
 
                     <div class="row">
                         <div class="col-lg-6">
@@ -85,6 +78,7 @@ $number = filter_input(INPUT_GET, "number", FILTER_SANITIZE_STRING);
                     </div>
                 <?php }
             } ?>
+			
         </div>
         <div class="row">
             <div class="offset-lg-8">
