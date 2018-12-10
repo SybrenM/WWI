@@ -101,10 +101,10 @@ if (isset($_SESSION['email'])) {
                         </select>
                     </div>
                     <div style="padding-bottom: 18px;">Title<span style="color: red;"> *</span><br/>
-                        <input type="text" id="data_5" name="reviewname" style="width : 450px;" class="form-control"/>
+                        <input type="text" id="data_5" name="reviewname" style="width : 450px;" class="form-control" required/>
                     </div>
                     <div style="padding-bottom: 18px;">Review<span style="color: red;"> *</span><br/>
-                        <textarea id="data_8" false name="review" style="width : 450px;" rows="9" class="form-control"></textarea>
+                        <textarea id="data_8" false name="review" style="width : 450px;" rows="9" class="form-control" required></textarea>
                     </div>
                     <div style="padding-bottom: 18px;"><input name="submit" value="Submit" type="submit"/></div>
                 </div>
