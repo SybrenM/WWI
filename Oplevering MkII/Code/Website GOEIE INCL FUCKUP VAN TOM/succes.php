@@ -36,7 +36,7 @@ if (isset($_POST["voornaam"])) {   //als voornaam is ingevuld op de vorige pagin
            $updateData = $conn->prepare('UPDATE customers SET PhoneNumber = :PhoneNumber, DeliveryAddressLine1 = :DeliveryAddressLine1, DeliveryPostalCode = :DeliveryPostalCode WHERE CustomerID = :CustomerID');
             $updateData->execute(array('PhoneNumber' => $_POST["telefoonnummer"], 'DeliveryAddressLine1' => $straatennummer, 'DeliveryPostalCode' => $postcode, 'CustomerID' => $_SESSION["ID"]));
     }
-        //CityID word bepaald doormiddel van het hoogste CityID te selecteren en dan dat +1 te doen, dit nieuwe getal word $StadID.
+       //CityID word bepaald doormiddel van het hoogste CityID te selecteren en dan dat +1 te doen, dit nieuwe getal word $StadID.
         $CityID = $conn->query('SELECT MAX(CityID) AS ID FROM cities');
         $StadID = 0;
         while ($number = $CityID->fetch()) {
@@ -50,14 +50,15 @@ if (isset($_POST["voornaam"])) {   //als voornaam is ingevuld op de vorige pagin
             $FactuurID += $nummer["ID"] + 1;
         }
         
-        
+                
+        //Zelfde als bij $StadID en FactuurID
            $CustomerID = $conn->query('SELECT MAX(CustomerID) AS ID FROM customers');
         $KlantID = 0;
         while ($klantNummer = $CustomerID->fetch()) {
             $KlantID += $klantNummer["ID"] + 1;
         }
         
-        
+        //Zelfde als bij $StadID en FactuurID
             $articlesID = $conn->query('SELECT MAX(InvoiceLineID) AS ID FROM invoicelines');
         $ArtikelID = 0;
         while ($Artikelnummer = $articlesID->fetch()) {
@@ -65,14 +66,14 @@ if (isset($_POST["voornaam"])) {   //als voornaam is ingevuld op de vorige pagin
         }
         
         
-
+        //CityID word opgehaald uit de database bij de bijbehoorende ingevulde plaats.
         $stmt3 = $conn->prepare('SELECT CityID FROM cities WHERE CityName = :plaats LIMIT 1');
         $stmt3->execute(array(':plaats' => $plaats));
         $CityID2 = 0;
         while ($query = $stmt3->fetch()) {
             $CityID2 += $query['CityID'];
            
-        }
+        }//Hier word bepaald of de City al bekend is in de database of niet, query word voorbereid en uitgevoerd.
         $stmt2 = $conn->prepare("SELECT COUNT(CityName) as City FROM cities WHERE CityName = :city");
         $stmt2->execute(array(':city' => $plaats));
         while ($query = $stmt2->fetch()) {
@@ -156,27 +157,21 @@ $insertPeople =	$conn->prepare('INSERT INTO people (PersonID, FullName, Preferre
                             $ArtikelID++;
                             $k++;
           
-                                        
-                           // echo $ArtikelID;
-                          //  echo $artikelen["StockItemID"];
                   
                         }
-                        
-                        
-                           // header('Location: succes.php');
-                       // exit;
+
                     } catch (PDOException $e) {
                         echo $e->getMessage();
-                    }
+                    }//als je wel bent ingelogt word het volgende uitgevoerd
                 }  elseif(isset($_SESSION['email'])){
                     $selectCities = $conn->prepare("SELECT COUNT(CityName) AS Tel FROM cities WHERE CityName = :plaats");
                     $selectCities->execute(array(':plaats' => $plaats));
                     $countCities = 0;
                     while($Cities = $selectCities->fetch()){
-                        $countCities += $Cities["Tel"];
+                        $countCities += $Cities["Tel"]; // eerst word er gekeken of de city bestaat deze kun je namelijk veranderen in het formulier als je bijvoorbeeld bent verhuist, er word een query voorbereid en uitgevoerd hiervoor.
                     }
                     
-                    if($countCities == 0){
+                    if($countCities == 0){ //als de city niet bestaat dan word deze aangemaakt door de onderstaande query
                       $insertCities =  $conn->prepare('INSERT INTO cities (CityID, CityName, StateProvinceID)
     
                          VALUES (:CityID, :CityName, :StateProvinceID)');
@@ -196,7 +191,7 @@ $insertPeople =	$conn->prepare('INSERT INTO people (PersonID, FullName, Preferre
              
                         
                     }
-
+                     //vervolgens worden de factuurgegevens in de database geplaatst met de juiste gegevens de code vanaf hier is weer het zelfde als de if statement, daar staat meer commentaar.
                     $stmt8 = $conn->prepare('INSERT INTO invoices (InvoiceID, CustomerID, BillToCustomerID, DeliveryMethodID) VALUES (:InvoiceID, :CustomerID, :BillToCustomerID, :DeliveryMethodID)');
                      $stmt8->execute(array(':InvoiceID' => $FactuurID, ':CustomerID' => $_SESSION["ID"], ':BillToCustomerID' => $_SESSION["ID"], 'DeliveryMethodID' => 1));
 
@@ -217,9 +212,6 @@ $insertPeople =	$conn->prepare('INSERT INTO people (PersonID, FullName, Preferre
                             $ArtikelID++;
                             $k++;
           
-                                        
-                           // echo $ArtikelID;
-                          //  echo $artikelen["StockItemID"];
                   
                         }
                         
@@ -227,29 +219,7 @@ $insertPeople =	$conn->prepare('INSERT INTO people (PersonID, FullName, Preferre
                     
                 }
                 
-//      $data = [
-//    'CustomerID' => $klantID,
-//    'CustomerName' => $fullName,
-//    'BillToCustomerID' => $klantID,
-//    'CustomerCategoryID' => 1,
-//    'DeliveryMethodID' => 1,
-//    'DeliveryCityID' => $StadID,
-//    'PostalCityID' => $StadID,
-//    'AccountOpenedDate' => $date,
-//    'Phonenumber' => $telefoonnummer,
-//    'DeliveryAddressLine1' => $straatennummer,
-//    'DeliveryAddressLine2' => $DeliveryAdressline2,
-//    'DeliveryPostalCode' => $postcode,
-//    'PostalAddressLine1' => $straatennummer,
-//    'PostalAddressLine2' => $land,
-//    'PostalPostalCode' => $postcode,
-//    'LastEditedBy' => 1,
-//];
 
-//$sql = "INSERT INTO customers (CustomerID, CustomerName, BillToCustomerID, CustomerCategoryID, DeliveryMethodID, DeliveryCityID, PostalCityID, AccountOpenedDate, Phonenumber, DeliveryAddressLine1, DeliveryAddressLine2, DeliveryPostalCode, PostalAddressLine1, PostalAddressLine2, PostalPostalCode, LastEditedBy)
-//                      VALUES (:CustomerID, :CustomerName, :BillToCustomerID, :CustomerCategoryID, :DeliveryMethodID, :DeliveryCityID, :PostalCityID, :AccountOpenedDate, :Phonenumber, :DeliveryAddressLine1, :DeliveryAddressLine2, :DeliveryPostalCode, :PostalAddressLine1, :PostalAddressLine2, :PostalPostalCode, :LastEditedBy)";
-//$stmt= $conn->prepare($sql);
-//$stmt->execute($data);
 ?>
 
 <!doctype html>
@@ -275,7 +245,7 @@ $insertPeople =	$conn->prepare('INSERT INTO people (PersonID, FullName, Preferre
             <div class="card">
                 <div class="card-header">
                     <strong>Factuurnummer: </strong><?php 
-                        echo $FactuurID;
+                        echo $FactuurID; // het volgende formulier is het factuur met alle gegevens van de klant op het factuur.
         ?>
                     <strong>Status:</strong> in behandeling
 
@@ -317,7 +287,7 @@ $insertPeople =	$conn->prepare('INSERT INTO people (PersonID, FullName, Preferre
                                 }
                                 ?></div>
                             <div>Adres: <?php if (isset($_POST["straat"])) {
-                                    echo str_replace("-", "", (clean($_POST["straat"])));
+                                    echo str_replace("-", "", (clean($_POST["straat"])) . " " . clean($_POST["huisnummer"]));
                                 }
                                 ?>, <?php if (isset($_POST["plaats"])) {
                                     echo (clean($_POST["plaats"]));
@@ -402,7 +372,7 @@ $insertPeople =	$conn->prepare('INSERT INTO people (PersonID, FullName, Preferre
                                         foreach ($_SESSION['winkelwagen'] as $key => $value) {
 //Als de session Key van winkelwagen met de opteller '$i' gelijk is aan de session Key van winkelwagen
                                             if ($keys[$i] == $key) {
-                                                echo ($_SESSION['aantal'][$key]);
+                                                echo ($_SESSION['aantal'][$key]); //voorraad aanpassen.
                                                 $searchStockHolding = $conn->prepare("SELECT * FROM stockitemholdings WHERE StockitemID = :stockitemID");
                                                 $searchStockHolding->execute(array(':stockitemID' => $artikelID));
                                                 while($stockHolding = $searchStockHolding->fetch()){
@@ -494,4 +464,3 @@ $insertPeople =	$conn->prepare('INSERT INTO people (PersonID, FullName, Preferre
 ?>
 
 </html>
-
